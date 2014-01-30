@@ -3,7 +3,7 @@ class Quiz(models.Model):
 	Quiz_Title = models.CharField(max_length=100)
 	Quiz_Description = models.CharField(max_length=1000)
 	#each of these is paired to the id of a question
-	#Quiz_Answer = models.CommaSeparatedIntegerField(max_length=100)
+	Quiz_Questions = models.CommaSeparatedIntegerField(max_length=100)
 
 class Question(models.Model):
 	question_text = models.CharField(max_length=500)
@@ -15,7 +15,7 @@ class Question(models.Model):
 	Answers = ( (answer1, '1'),(answer2, '2'),(answer3,'3'),(answer4,'4'))
 	#selectedAnswer = models.CharField(max_length=50,choices=Answers)
 
-	Quiz_Part = models.ForeignKey(Quiz,default=1)
+	#Quiz_Part = models.ForeignKey(Quiz,default=1)
 class Result(models.Model):
 	Quiz_Results = models.ForeignKey(Quiz,default=1)
 	Quiz_Scoring = models.CommaSeparatedIntegerField(max_length=100)

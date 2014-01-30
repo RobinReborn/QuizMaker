@@ -1,0 +1,37 @@
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript">
+var question_no = 1
+function add_question(){
+	question_no++
+	var html_question_begining = '<form id="q'
+	var html_question_middle = '">Question<input id="question'
+	var html_question_end = '"></input><br/>Answer1<input id="option1button"></input><br/>Answer2<input id="option2button"></input><br/>Answer3<input id="option3button"></input><br/>Answer4<input id="option4button"></input><br/></form>'
+	$("#questions").append(html_question_begining + question_no + html_question_middle + question_no +  html_question_end)
+	
+}
+function add_result(){
+	//e.preventDefault();
+	var result = $("#result1").val()
+	$("#results").append("<th>"+result+"</th>")
+}
+</script>
+
+
+Quiz name:        <input type="text" name="Quiz_Name"> Result name: <input type="text" id="result1"></input> <button onclick="add_result();">Add another Result</button><br>
+Quiz description: <input type="text" name="Quiz_Description">Result explanation <input type="text" name="result_explanation1"></input> <br>
+
+<table border=1>
+<div id="results"><tr></tr></div>
+<div id="questions">
+<form id="q1">
+<tr><td>Question<input id="question"></input><br/></td></tr>
+<tr><td>Answer1<input id="option1button"></input><br/></td></tr>
+<tr><td>Answer2<input id="option2button"></input><br/></td></tr>
+<tr><td>Answer3<input id="option3button"></input><br/></td></tr>
+<tr><td>Answer4<input id="option4button"></input><br/></td></tr>
+</form>
+
+</div>
+</table>
+<button onclick="add_question();">Add another question</button>
+<button onclick="submit_quiz();">continue</button>

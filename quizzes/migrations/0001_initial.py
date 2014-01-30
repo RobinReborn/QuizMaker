@@ -13,6 +13,7 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('Quiz_Title', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('Quiz_Description', self.gf('django.db.models.fields.CharField')(max_length=1000)),
+            ('Quiz_Questions', self.gf('django.db.models.fields.CommaSeparatedIntegerField')(max_length=100)),
         ))
         db.send_create_signal(u'quizzes', ['Quiz'])
 
@@ -24,7 +25,6 @@ class Migration(SchemaMigration):
             ('answer2', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('answer3', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('answer4', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('Quiz_Part', self.gf('django.db.models.fields.related.ForeignKey')(default=1, to=orm['quizzes.Quiz'])),
         ))
         db.send_create_signal(u'quizzes', ['Question'])
 
@@ -53,7 +53,6 @@ class Migration(SchemaMigration):
     models = {
         u'quizzes.question': {
             'Meta': {'object_name': 'Question'},
-            'Quiz_Part': ('django.db.models.fields.related.ForeignKey', [], {'default': '1', 'to': u"orm['quizzes.Quiz']"}),
             'answer1': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             'answer2': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             'answer3': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
@@ -64,6 +63,7 @@ class Migration(SchemaMigration):
         u'quizzes.quiz': {
             'Meta': {'object_name': 'Quiz'},
             'Quiz_Description': ('django.db.models.fields.CharField', [], {'max_length': '1000'}),
+            'Quiz_Questions': ('django.db.models.fields.CommaSeparatedIntegerField', [], {'max_length': '100'}),
             'Quiz_Title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         },
