@@ -7,6 +7,6 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'quizmaker.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
-    url(r'^quizzes/', include('quizzes.urls')),
+    url(r'^quizzes/', include('quizzes.urls', namespace="quizzes")),
     url(r'^admin/', include(admin.site.urls)),
 )
