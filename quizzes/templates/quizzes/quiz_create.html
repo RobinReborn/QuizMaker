@@ -3,7 +3,8 @@
 var question_no = 0
 var results_html = ""
 var results_list = []
-
+var result_number = 0
+var result_no = ""
 function add_question(){
 	question_no++
 	var html_question_begining = "<div id='q"
@@ -11,30 +12,28 @@ function add_question(){
 	var html_question_end = "' name='question" + question_no + "' ></input><br/></td></tr><tr class='a1' id='a1q" + question_no + "'><td>Answer1<input id='option1button' name='answer1_q" + question_no + "'></input><br/></td></tr><tr class='a2' id='a2q" + question_no + "'><td>Answer2<input id='option2button' name='answer2_q" + question_no + "'></input><br/></td></tr><tr class='a3' id='a3q" + question_no + "'><td>Answer3<input id='option3button' name='answer3_q" + question_no + "'></input><br/></td></tr><tr class='a4' id='a4q" + question_no + "'><td>Answer4<input id='option4button' name='answer4_q" + question_no + "'></input><br/></td></tr></div></table>"
 	$("#questions").append(html_question_begining + question_no + html_question_middle + question_no +  html_question_end)
 	var results_no = "#resultsq" + question_no
-	for (var i = 0; i < results_list.length; i++) {
-		$(results_no).append("<td>" + results_list[i] + "</td")	
-		$("#a1q" + question_no).append("<td><input type='text' name='r1'></input></td>")
-		$("#a2q" + question_no).append("<td><input type='text' name='r2'></input></td>")
-		$("#a3q" + question_no).append("<td><input type='text' name='r3'></input></td>")
-		$("#a4q" + question_no).append("<td><input type='text' name='r4'></input></td>")
+	for (var i = 1; i < results_list.length +1; i++) {
+		$(results_no).append("<td>" + results_list[i-1] + "</td")	
+		$("#a1q" + question_no).append("<td><input type='text' name='r1_" + i +"_" + question_no + "'></input></td>")
+		$("#a2q" + question_no).append("<td><input type='text' name='r2_" + i +"_" + question_no + "'></input></td>")
+		$("#a3q" + question_no).append("<td><input type='text' name='r3_" + i +"_" + question_no + "'></input></td>")
+		$("#a4q" + question_no).append("<td><input type='text' name='r4_" + i +"_" + question_no + "'></input></td>")
 }
 }
 function add_result(){
+	result_number++
 	var result = $("#result").val()
 	results_list.push(result)
 	var result_explanation = $("#result_explanation").val()
-	$(".results").append("<td title='"+ result_explanation  + "'><input type='hidden' name='" + result + "_explanation' value = '" + result_explanation + "'>"  +result+"</td>")
-	$(".a1").append("<td><input type='text' name='r1'></input></td>")
-	$(".a2").append("<td><input type='text' name='r2'></input></td>")
-	$(".a3").append("<td><input type='text' name='r3'></input></td>")
-	$(".a4").append("<td><input type='text' name='r4'></input></td>")
+	$(".results").append("<td title='"+ result_explanation  + "'><input type='hidden' name='result" + result_number  + result_no + "' value = '" + result + "'><input type='hidden' name='result_explanation" + result_number + result_no + "' value ='" + result_explanation + "'>"  +result+"</td>")
+	for (var i =1; i < question_no +1; i++) {
+		$("#a1q" + i).append("<td><input type='text' name='r1_" + result_number + "_" + i + "'></input></td>")
+		$("#a2q" + i).append("<td><input type='text' name='r2_" + result_number + "_" + i + "'></input></td>")
+		$("#a3q" + i).append("<td><input type='text' name='r3_" + result_number + "_" + i + "'></input></td>")
+		$("#a4q" + i).append("<td><input type='text' name='r4_" + result_number + "_" + i + "'></input></td>")
+	}	
 	results_html += "<td>" + result + "</td>"
 }
-
-//function submit_quiz(){
-//	$.post("")//, {csrfmiddlewaretoken: {{ csrf_token }}})
-//}
-	
 
 
 </script>
@@ -42,17 +41,7 @@ function add_result(){
 <form action="created/" method="post"> 
 {% csrf_token %}
 Quiz name:<input type="text" name="Quiz_Name"> Result name: <input type="text" id="result"></input> <button type = "button" onclick="add_result();">Add another Result</button><br>
-Quiz description: <input type="text" name="Quiz_Description">Result explanation <input type="text" name="result_explanation" id="result_explanation"></input> <br>
-<!--<div id="results"><tr><td>kk</td></tr></div> 
-<tr id="results"><td>ka</td></tr>
-<form id="q1">
-<tr><td>Question<input id="question"></input><br/></td></tr>
-<tr id="a1"><td>Answer1<input id="option1button"></input><br/></td></tr>
-<tr id="a2"><td>Answer2<input id="option2button"></input><br/></td></tr>
-<tr id="a3"><td>Answer3<input id="option3button"></input><br/></td></tr>
-<tr id="a4"><td>Answer4<input id="option4button"></input><br/></td></tr>
-</form>
-</table>--!>
+Quiz description: <input type="text" name="Quiz_Description">Result explanation <input type="text" name="explanation" id="result_explanation"></input> <br>
 
 <div id="questions"></div>
 </input>
