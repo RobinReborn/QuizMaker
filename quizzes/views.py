@@ -93,19 +93,21 @@ def created(request):
 			scoring_list = []
 			for match_key in data:
 				if (re.match(r'r1_'+result_number+'.*',match_key)):
-						#this takes us through all the scores for a particular results
-						result_scoring_list = []
-						result_scoring_list.append(data[match_key])
-						#we take the end of match_key but replace the begining with r2
-						result_scoring_list.append(data['r2'+match_key[2:]])
-						result_scoring_list.append(data['r3'+match_key[2:]])
-						result_scoring_list.append(data['r4'+match_key[2:]])
-						scoring_list.append(result_scoring_list)
+					#this takes us through all the scores for a particular results
+					result_scoring_list = []
+					result_scoring_list.append(data[match_key])
+					#we take the end of match_key but replace the begining with r2
+					result_scoring_list.append(data['r2'+match_key[2:]])
+					result_scoring_list.append(data['r3'+match_key[2:]])
+					result_scoring_list.append(data['r4'+match_key[2:]])
+					scoring_list.append(result_scoring_list)
 			result.Quiz_Scoring = scoring_list
 			result.save()
-			#right now we're adding this twice
-			quiz.results.add(result)
-			quiz.save()
+			#we only add a result for the first question
+			if (re.match(r'r1_'+result_number+'_1',key)):
+			#right now we're adding this for each question
+				quiz.results.add(result)
+				quiz.save()
 	quiz_questions = []
 	quiz_results = []
 	for q in quiz.questions.all():

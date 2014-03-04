@@ -15,7 +15,7 @@ function add_question(){
 	var results_no = "#resultsq" + question_no
 
 	for (var i = 1; i < results_list.length + 1; i++) {
-		$(results_no).append("<td title='" + result_explanation_list[i-1] + "'>" + results_list[i] +  "</td>")	
+		$(results_no).append("<td title='" + result_explanation_list[i-1] + "'>" + results_list[i-1] +  "</td>")	
 		$("#a1q" + question_no).append("<td><input type='text' name='r1_" + i +"_" + question_no + "'></input></td>")
 		$("#a2q" + question_no).append("<td><input type='text' name='r2_" + i +"_" + question_no + "'></input></td>")
 		$("#a3q" + question_no).append("<td><input type='text' name='r3_" + i +"_" + question_no + "'></input></td>")
