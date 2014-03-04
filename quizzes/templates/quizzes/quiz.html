@@ -2,15 +2,17 @@
 <h1>	{{ quiz_request.Quiz_Title }}  </h1>
 <h2>{{ quiz_request.Quiz_Description }} </h2>
 
+<form action="results/" method=post>
+	{% csrf_token %}
 {% for choice in quiz_questions %}
 <h3>{{choice.question_text}}</h3>
-<form>
-<input type="radio" name="a1" value={{choice.answer1}}>{{choice.answer1}}<br>
-<input type="radio" name="a2" value={{choice.answer2}}>{{choice.answer2}}<br>
-<input type="radio" name="a3" value={{choice.answer3}}>{{choice.answer3}}<br>
-<input type="radio" name="a4" value={{choice.answer4}}>{{choice.answer4}}<br>
+
+<input type="radio" name= "question-{{choice.pk}}" value=1>{{choice.answer1}}<br>
+	<input type="radio" name= "question-{{choice.pk}}" value=2>{{choice.answer2}}<br>
+	<input type="radio" name= "question-{{choice.pk}}" value=3>{{choice.answer3}}<br>
+	<input type="radio" name= "question-{{choice.pk}}" value=4>{{choice.answer4}}<br>
 {% endfor %}
-<button></button>
+<input type='submit'>
 </form>
 {% else %}
     <p>No quizz matches that name.</p>

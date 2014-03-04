@@ -1,0 +1,58 @@
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript">
+	//this is a list of the answers to all questions
+	var answerArray = []
+	//this is a list of the scores for each answer to each question
+	var resultArray = []
+	//this is a list of scores for each result
+	var scoringArray = []
+	var numResults = 0
+	function computeResults(request){
+		return request
+	}
+
+</script>
+{% if request %}
+<ul>
+	{%for e,k in request.POST.items %}
+	{% if e != 'csrfmiddlewaretoken' %}
+	<li>{{e}} {{k}}</li>
+	<script type="text/javascript">
+		answerArray.push({{k}})
+	</script>
+	{% endif %}
+	{% endfor %}
+</ul>
+<br>
+{% endif %}
+{% if results %}
+{% for e in results %}
+<ul>
+	<li>{{e}} {{e.Quiz_Scoring}} {{e.Quiz_Result_Explanation}}</li>
+	<script type="text/javascript">
+		var formatArray = "{{e.Quiz_Scoring}}"
+		//this reformat the array, it gets rid of weird unicode stuff and keeps the results in groups of four
+		formatArray = formatArray.replace(/u&#39;/g, "")
+		formatArray = formatArray.replace(/&#39;/g, "")
+		formatArray = formatArray.replace("[[","")
+		formatArray = formatArray.replace("]]","")
+	formatArray = formatArray.split("], [")
+	for (var i = 0; i< formatArray.length; i++){
+		formatArray[i] = formatArray[i].split(",")
+	}
+		resultArray.push(formatArray)
+		scoringArray.push(0)
+	for (var i = 0; i < answerArray.length; i++){
+		//the score for the result we're examining is equal to the previous score plus the score
+		//in the resultArray indexed by the answer times an offset equal to the location in the results array
+		scoringArray[numResults] = scoringArray[numResults] + parseInt(resultArray[numResults][i][answerArray[i]-1])
+	}
+numResults++
+
+	</script>
+</ul>
+{% endfor %}
+<script type="text/javascript">
+	document.write(scoringArray)
+</script>
+{% endif %}
