@@ -23,6 +23,13 @@ function add_question(){
 }
 }
 function add_result(){
+	if ($("#result").val() == ""){
+		if ($("#errorMessages").text() != "Give your Result a name!"){
+			$("#errorMessages").append("Give your Result a name!")
+		}
+	}
+	else{
+		$("#errorMessages").empty()
 	result_number++
 	var result = $("#result").val()
 	results_list.push(result)
@@ -30,7 +37,7 @@ function add_result(){
 	result_explanation_list.push(result_explanation)
 	$(".results").append("<td title='"+ result_explanation  + "'>"  +result+"</td>")
 	for (var i =1; i < question_no +1; i++) {
-		$("#a1q" + i).append("<td><input type='text' name='r1_" + result_number + "_" + i + "'></input></td>")
+		$("#a1q" + i).append("<td><input type='number' name='r1_" + result_number + "_" + i + "'></input></td>")
 		$("#a2q" + i).append("<td><input type='text' name='r2_" + result_number + "_" + i + "'></input></td>")
 		$("#a3q" + i).append("<td><input type='text' name='r3_" + result_number + "_" + i + "'></input></td>")
 		$("#a4q" + i).append("<td><input type='text' name='r4_" + result_number + "_" + i + "'></input></td>")
@@ -38,19 +45,21 @@ function add_result(){
 	results_html += "<td>" + result + "</td>"
 	$("#All_Results").val(results_list)
 	$("#All_Results_Explanation").val(result_explanation_list)
+	}
 }
-
 
 </script>
 <body onload="add_question()">
 <form action="created/" method="post"> 
 {% csrf_token %}
-Quiz name:<input type="text" name="Quiz_Name"> Result name: <input type="text" id="result"></input> <button type = "button" onclick="add_result();">Add another Result</button><br>
+Quiz name:<input type="text" name="Quiz_Name" required> Result name: <input type="text" id="result" required ></input> <button type = "button" onclick="add_result();">Add another Result</button><br>
 Quiz description: <input type="text" name="Quiz_Description">Result explanation <input type="text" name="explanation" id="result_explanation"></input> <br>
 <input type="hidden" type = 'text' id='All_Results' name='All_Results'>
 <input type="hidden" type = "text" id="All_Results_Explanation" name="All_Results_Explanation">
+<div id="errorMessages"></div>
 <div id="questions"></div>
 </input>
+
 <button type="button" onclick="add_question();">Add another question</button>
 <input type="submit" value="Submit Quiz" /></form>
 </body>
