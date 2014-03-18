@@ -50,6 +50,12 @@ function add_result(){
 
 </script>
 <body onload="add_question()">
+
+	<h2>Welcome to Quiz Creator!</h2>
+	<h3>Begin by naming and describing your questions in the fields next to Quiz name and Quiz description</h3><br/>
+	<h3>Then start adding results or questions</h3><br/>
+	<h3>To add a question, first type in the question then each of the possible answers, click the add question button to add another question</h3><br/>
+	<h3>A result is what a user will get when they're done with the quiz, each pair of answers and results has an input associated with it which signifies how many points towards that result the user will get for selecting that answer, when the user is finished with the quiz their result will be the result which they scored highest on</h3>
 <form action="created/" method="post"> 
 {% csrf_token %}
 Quiz name:<input type="text" name="Quiz_Name" required> Result name: <input type="text" id="result" required ></input> <button type = "button" onclick="add_result();">Add another Result</button><br>
