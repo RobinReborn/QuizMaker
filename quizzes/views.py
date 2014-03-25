@@ -68,13 +68,15 @@ def created(request):
 			total_questions = total_questions+1
 			question = Question()
 			question.question_text = data[key]
-			question.answer1 = data['answer1_q' + str(total_questions)]
-			question.answer2 = data['answer2_q' + str(total_questions)]
-			question.answer3 = data['answer3_q' + str(total_questions)]
-			question.answer4 = data['answer4_q' + str(total_questions)]
+			#question.answer1 = data['answer1_q' + str(total_questions)]
+			#question.answer2 = data['answer2_q' + str(total_questions)]
+			#question.answer3 = data['answer3_q' + str(total_questions)]
+			#question.answer4 = data['answer4_q' + str(total_questions)]
+			question.QuestionNumber = total_questions
 			question.save()
 			quiz.questions.add(question)
 			quiz.save()
+	#we need to change this to deal with variable numbers of answers
 	for key in data:
 		#this deals with results
 		if (re.match(r'r1.*',key)):
@@ -102,6 +104,7 @@ def created(request):
 					result_scoring_list.append(data['r4'+match_key[2:]])
 					scoring_list.append(result_scoring_list)
 			result.Quiz_Scoring = scoring_list
+			result.resultNumber = result_number
 			result.save()
 			#we only add a result for the first question
 			if (re.match(r'r1_'+result_number+'_1',key)):
