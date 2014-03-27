@@ -19,24 +19,28 @@ function add_question(){
 	$("#questions").append(html_question_begining + question_no + html_question_middle + question_no +  html_question_end)
 	results_no = "#resultsq" + question_no
 	questionAnswersArray[question_no] = 2
+	for (var i = 1; i < results_list.length + 1; i++)
+	{
+		$(results_no).append("<td title='" + result_explanation_list[i-1] + "'>" + results_list[i-1] +  "</td>")  
+	}
+	for (var i = 1; i < questionAnswersArray[question_no]+1; i++) {
+		add_result(question_no,i)	
+	}
+	$("#questionAnswersArray").val(questionAnswersArray)
 }
 //this adds results to individual answers
 function add_result(question,answer){
-	$("#a" + answer + "q" + question).append
+	//$("#a" + answer + "q" + question).append
 	for (var i = 1; i < results_list.length + 1; i++) {
-		//$(results_no).append("<td title='" + result_explanation_list[i-1] + "'>" + results_list[i-1] +  "</td>")	
 		$("#a" + answer + "q" + question).append("<td><input type='text' name='r" + answer + "_" + i +"_" + question + "'></input></td>")
-
-		//$("#a2q" + question_no).append("<td><input type='text' name='r2_" + i +"_" + question_no + "'></input></td>")
-		//$("#a3q" + question_no).append("<td><input type='text' name='r3_" + i +"_" + question_no + "'></input></td>")
-		//$("#a4q" + question_no).append("<td><input type='text' name='r4_" + i +"_" + question_no + "'></input></td>")
-}
+	}
 }
 function add_answer(question){
 	var answersInQuestion = 1+questionAnswersArray[question]
 	$("#tq" + question).append("<tr class ='a" + answersInQuestion + "' id='a" + answersInQuestion + "q" + question + "'><td>Answer" + answersInQuestion + "<input name='answer" + answersInQuestion + "_q" + question + "'></input><br/></td></tr>")
 	add_result(question,questionAnswersArray[question] + 1)
 	questionAnswersArray[question]++
+	$("#questionAnswersArray").val(questionAnswersArray)
 	
 }
 function add_results(){
@@ -54,10 +58,10 @@ function add_results(){
 	result_explanation_list.push(result_explanation)
 	$(".results").append("<td title='"+ result_explanation  + "'>"  +result+"</td>")
 	for (var i =1; i < question_no +1; i++) {
-		$("#a1q" + i).append("<td><input type='number' name='r1_" + result_number + "_" + i + "'></input></td>")
-		$("#a2q" + i).append("<td><input type='text' name='r2_" + result_number + "_" + i + "'></input></td>")
-		$("#a3q" + i).append("<td><input type='text' name='r3_" + result_number + "_" + i + "'></input></td>")
-		$("#a4q" + i).append("<td><input type='text' name='r4_" + result_number + "_" + i + "'></input></td>")
+		for (var j = 1; j < questionAnswersArray[i]+1; j++){
+			//add_result(i,j)
+			$("#a" + j + "q" + i).append("<td><input type='text' name='r" + j + "_" + result_number +"_" + i + "'></input></td> ")	
+		}
 	}	
 	results_html += "<td>" + result + "</td>"
 	$("#All_Results").val(results_list)
@@ -83,6 +87,7 @@ Quiz description: <input type="text" name="Quiz_Description">
 Result explanation <input type="text" name="explanation" id="result_explanation"></input> <br>
 <input type="hidden" type = 'text' id='All_Results' name='All_Results'>
 <input type="hidden" type = "text" id="All_Results_Explanation" name="All_Results_Explanation">
+<input type="hidden" type = "text" id="questionAnswersArray" name="questionAnswersArray">
 <div id="errorMessages"></div>
 <div id="questions"></div>
 </input>

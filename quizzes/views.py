@@ -60,6 +60,10 @@ def created(request):
 
 	Results_List = data['All_Results']
 	Results_Explanation_List = data['All_Results_Explanation']
+	questionAnswersArray = data['questionAnswersArray']
+	q_a_a_list = questionAnswersArray.split(",")
+	r_list = Results_List.split(",")
+	r_e_list = Results_Explanation_List.split(",")
 	total_questions = 0
 	total_results = 0
 	for key in data:
@@ -68,17 +72,26 @@ def created(request):
 			total_questions = total_questions+1
 			question = Question()
 			question.question_text = data[key]
-			#question.answer1 = data['answer1_q' + str(total_questions)]
-			#question.answer2 = data['answer2_q' + str(total_questions)]
-			#question.answer3 = data['answer3_q' + str(total_questions)]
-			#question.answer4 = data['answer4_q' + str(total_questions)]
-			question.QuestionNumber = total_questions
+			question.questionNumber = total_questions
+			print total_questions
 			question.save()
+			print question.questionNumber
 			quiz.questions.add(question)
 			quiz.save()
+	for key in data:
+		#this deals with answers
+		if (re.match(r'answer.*',key)):
+			answer = Answer()
+			answer.answer_text = data[key]
+			#we parse the key to find the question and answer number
+			answerNumber = key[5:string.find(key,'_')]
+			questionNumber = key[string.find(key,'_') + 2:]
+			answer.answerNumber = answerNumber
+			answer.question = quiz.questions.get(questionNumber=questionNumber)
+			answer.save()
 	#we need to change this to deal with variable numbers of answers
 	for key in data:
-		#this deals with results
+		#we can rely in having a score value for r1_y_z, then look through y and z
 		if (re.match(r'r1.*',key)):
 			#result scoring is of the form rx_y_z where x is the answer
 			#y is the result and z is the question
@@ -88,20 +101,20 @@ def created(request):
 			right_index = string.rfind(key,'_')
 			result_number = key[left_index+1:right_index]
 			question_number = key[right_index+1:]
-			r_list = Results_List.split(",")
-			r_e_list = Results_Explanation_List.split(",")
 			result.Quiz_Result = r_list[int(result_number)-1]
 			result.Quiz_Result_Explanation = r_e_list[int(result_number)-1]
 			scoring_list = []
+			#this deals with a specific answer in the results
 			for match_key in data:
 				if (re.match(r'r1_'+result_number+'.*',match_key)):
 					#this takes us through all the scores for a particular results
 					result_scoring_list = []
 					result_scoring_list.append(data[match_key])
-					#we take the end of match_key but replace the begining with r2
-					result_scoring_list.append(data['r2'+match_key[2:]])
-					result_scoring_list.append(data['r3'+match_key[2:]])
-					result_scoring_list.append(data['r4'+match_key[2:]])
+					#for each question
+					#for x in range(1,(int(q_a_a_list[int(question_number)]))):
+					#	result_scoring_list.append(data['r'+str(x)+match_key[2:]])
+					#result_scoring_list.append(data['r3'+match_key[2:]])
+					#result_scoring_list.append(data['r4'+match_key[2:]])
 					scoring_list.append(result_scoring_list)
 			result.Quiz_Scoring = scoring_list
 			result.resultNumber = result_number
