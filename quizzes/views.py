@@ -16,14 +16,20 @@ def index(request):
     return render(request, 'quizzes/index.html', context)
 @csrf_protect
 def quiz(request,Quiz_Name):
-    quiz_request = Quiz.objects.get(Quiz_Title=Quiz_Name)
-    quiz_questions = []
-    for q in quiz_request.questions.all():
-        if (q != ','):
-            quiz_questions.append(q)
-    template = loader.get_template('quizzes/quiz.html')
-    context = {'quiz_request': quiz_request, 'quiz_questions': quiz_questions}
-    return render(request, 'quizzes/quiz.html', context)  
+	quiz_request = Quiz.objects.get(Quiz_Title=Quiz_Name)
+	quiz_questions = []
+	quiz_answers = []
+	for q in quiz_request.questions.all():
+		if (q != ','):
+			quiz_questions.append(q)
+			#right now we're going through all the answers
+			#we could change the model to have answers belong to questions
+			#rather than the other way around
+			for a in Answer.objects.filter(question=q):
+				quiz_answers.append(a)
+	template = loader.get_template('quizzes/quiz.html')
+	context = {'quiz_request': quiz_request, 'quiz_questions': quiz_questions, 'quiz_answers': quiz_answers}
+	return render(request, 'quizzes/quiz.html', context)  
 
 @csrf_protect
 def quiz_create(request):
@@ -47,17 +53,13 @@ def result(request,Quiz_Name):
 	return render_to_response('quizzes/result.html',c)
 @csrf_protect
 def created(request):
-    
 	data = request.POST.dict()
 	template = loader.get_template('quizzes/quiz_created.html')
     #here we do some stuff to add the quiz, questions and results to our DB
 	quiz = Quiz()
-
 	quiz.Quiz_Title = request.POST['Quiz_Name']
 	quiz.Quiz_Description = request.POST['Quiz_Description']
-
 	quiz.save()
-
 	Results_List = data['All_Results']
 	Results_Explanation_List = data['All_Results_Explanation']
 	questionAnswersArray = data['questionAnswersArray']
@@ -73,9 +75,8 @@ def created(request):
 			question = Question()
 			question.question_text = data[key]
 			question.questionNumber = total_questions
-			print total_questions
+			question.num_Answers = q_a_a_list[total_questions]
 			question.save()
-			print question.questionNumber
 			quiz.questions.add(question)
 			quiz.save()
 	for key in data:
@@ -84,11 +85,12 @@ def created(request):
 			answer = Answer()
 			answer.answer_text = data[key]
 			#we parse the key to find the question and answer number
-			answerNumber = key[5:string.find(key,'_')]
+			answerNumber = key[6:string.find(key,'_')]
 			questionNumber = key[string.find(key,'_') + 2:]
 			answer.answerNumber = answerNumber
-			answer.question = quiz.questions.get(questionNumber=questionNumber)
+			question_add = quiz.questions.get(questionNumber=questionNumber)
 			answer.save()
+			question_add.add(answer)
 	#we need to change this to deal with variable numbers of answers
 	for key in data:
 		#we can rely in having a score value for r1_y_z, then look through y and z
@@ -103,7 +105,7 @@ def created(request):
 			question_number = key[right_index+1:]
 			result.Quiz_Result = r_list[int(result_number)-1]
 			result.Quiz_Result_Explanation = r_e_list[int(result_number)-1]
-			scoring_list = []
+			total_scoring_list = []
 			#this deals with a specific answer in the results
 			for match_key in data:
 				if (re.match(r'r1_'+result_number+'.*',match_key)):
@@ -111,14 +113,18 @@ def created(request):
 					result_scoring_list = []
 					result_scoring_list.append(data[match_key])
 					#for each question
-					#for x in range(1,(int(q_a_a_list[int(question_number)]))):
-					#	result_scoring_list.append(data['r'+str(x)+match_key[2:]])
+					for x in range(1,(int(q_a_a_list[int(question_number)])-1 )):
+						#print x
+						#print match_key
+						result_scoring_list.append(data['r'+str(x)+ match_key[left_index:]])
 					#result_scoring_list.append(data['r3'+match_key[2:]])
 					#result_scoring_list.append(data['r4'+match_key[2:]])
-					scoring_list.append(result_scoring_list)
-			result.Quiz_Scoring = scoring_list
+					total_scoring_list.append(result_scoring_list)
+			result.Quiz_Scoring = total_scoring_list
 			result.resultNumber = result_number
 			result.save()
+
+			#this needs to be modified
 			#we only add a result for the first question
 			if (re.match(r'r1_'+result_number+'_1',key)):
 			#right now we're adding this for each question

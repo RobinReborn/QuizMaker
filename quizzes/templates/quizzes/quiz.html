@@ -4,16 +4,21 @@
 
 <form action="results/" method=post>
 	{% csrf_token %}
-{% for choice in quiz_questions %}
-<h3>{{choice.question_text}}</h3>
-
-<input type="radio" name= "question-{{choice.pk}}" value=1>{{choice.answer1}}<br>
-	<input type="radio" name= "question-{{choice.pk}}" value=2>{{choice.answer2}}<br>
+	{{quiz_questions}}
+{% for question in quiz_questions %}
+<h3>{{question.question_text}}</h3>
+{{question.answers}}
+{% for answer in question.answers.all %}
+{{answer}}
+<input type="radio" name= "question-{{question.pk}}" value={{answer.AnswerNumber}}>{{answer.answertext}}<br>
+{% endfor %}
+	<!--<input type="radio" name= "question-{{choice.pk}}" value=2>{{choice.answer2}}<br>
 	<input type="radio" name= "question-{{choice.pk}}" value=3>{{choice.answer3}}<br>
 	<input type="radio" name= "question-{{choice.pk}}" value=4>{{choice.answer4}}<br>
-{% endfor %}
+	--!>
+	{% endfor %}
 <input type='submit'>
 </form>
 {% else %}
-    <p>No quizz matches that name.</p>
+    <p>No quiz matches that name.</p>
 {% endif %}
