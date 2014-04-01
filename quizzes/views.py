@@ -83,15 +83,17 @@ def created(request):
 		#this deals with answers
 		if (re.match(r'answer.*',key)):
 			answer = Answer()
-			answer.answer_text = data[key]
+			answer.answertext = data[key]
+			print data[key]
 			#we parse the key to find the question and answer number
 			answerNumber = key[6:string.find(key,'_')]
 			questionNumber = key[string.find(key,'_') + 2:]
 			answer.answerNumber = answerNumber
 			question_add = quiz.questions.get(questionNumber=questionNumber)
 			answer.save()
-			question_add.add(answer)
-	#we need to change this to deal with variable numbers of answers
+			question_add.answers.add(answer)
+			question_add.answers.order_by(answerNumber)
+	#we need to order the answers
 	for key in data:
 		#we can rely in having a score value for r1_y_z, then look through y and z
 		if (re.match(r'r1.*',key)):

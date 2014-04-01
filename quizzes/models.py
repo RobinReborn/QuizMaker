@@ -25,7 +25,7 @@ class Answer(models.Model):
 	answertext = models.CharField(max_length=100)
 	answerNumber = models.IntegerField(default=0)
 	#this should place the image in quiz/question_pk/answer_pk
-	image = models.ImageField(upload_to='/images/',default=None)
+	image = models.ImageField(upload_to='/images/',default=None,blank=True)
 	def __unicode__(self):
 		        return unicode(self.answertext)
 	#Quiz_Part = models.ForeignKey(Quiz,default=1)

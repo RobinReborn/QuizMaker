@@ -3,4 +3,5 @@ from quizzes.models import *
 admin.site.register(Question)
 admin.site.register(Quiz)
 admin.site.register(Result)
+admin.site.register(Answer)
 # Register your models here.

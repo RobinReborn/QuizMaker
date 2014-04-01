@@ -15,7 +15,7 @@
 <ul>
 	{%for e,k in request.POST.items %}
 	{% if e != 'csrfmiddlewaretoken' %}
-	<!-- <li>{{e}} {{k}}</li> --!>
+	<<li>{{e}} {{k}}</li> --!>
 	<script type="text/javascript">
 		answerArray.push({{k}})
 	</script>
@@ -27,7 +27,7 @@
 {% if results %}
 {% for e in results %}
 <ul>
-	<!--<li>{{e}} {{e.Quiz_Scoring}} {{e.Quiz_Result_Explanation}}</li> -->
+	<li>{{e}} {{e.Quiz_Scoring}} {{e.Quiz_Result_Explanation}}</li> -->
 	<script type="text/javascript">
 		resultTextArray.push("{{e}}")
 		resultTextArray.push("{{e.Quiz_Result_Explanation}}")
@@ -58,7 +58,7 @@ numResults++
 <h3 id='result_explanation'>
 </h3>
 <script type="text/javascript">
-	//document.write(scoringArray)
+	document.write(scoringArray)
 var i = scoringArray.indexOf(Math.max.apply(Math, scoringArray))
 	$("#result").append(resultTextArray[2*i])
 	$("#result_explanation").append(resultTextArray[(2*i)+1])
