@@ -14,8 +14,6 @@ function add_question(){
 	var html_question_middle = "'><table border=2 id='tq" + question_no + "'><tr class='results' id='resultsq" + question_no + "'><td><button type='button' onclick='add_answer(" + question_no + ");'>Add Answer </button> </td></tr><tr><td>Question<input id='question"
 	//here will need to change based on the quiz type
 	var html_question_end = "' name='question" + question_no + "' ></input><br/></td></tr> <tr class='a1' id='a1q" + question_no + "'><td>Answer1<input id='option1button' name='answer1_q" + question_no + "'></input><br/>     </td></tr><tr class='a2' id='a2q" + question_no + "'><td>Answer2<input id='option2button' name='answer2_q" + question_no + "'></input>"
-	//old stuff for adding for answers, we can use it when we have defined quiz types
-	//<tr class='a1' id='a1q" + question_no + "'><td>Answer1<input id='option1button' name='answer1_q" + question_no + "'></input><br/></td></tr><tr class='a2' id='a2q" + question_no + "'><td>Answer2<input id='option2button' name='answer2_q" + question_no + "'></input><br/></td></tr><tr class='a3' id='a3q" + question_no + "'><td>Answer3<input id='option3button' name='answer3_q" + question_no + "'></input><br/></td></tr><tr class='a4' id='a4q" + question_no + "'><td>Answer4<input id='option4button' name='answer4_q" + question_no + "'></input><br/></td></tr></div></table>"
 	$("#questions").append(html_question_begining + question_no + html_question_middle + question_no +  html_question_end)
 	results_no = "#resultsq" + question_no
 	questionAnswersArray[question_no] = 2
@@ -27,12 +25,13 @@ function add_question(){
 		add_result(question_no,i)	
 	}
 	$("#questionAnswersArray").val(questionAnswersArray)
+	$("#numQuestions").val(question_no)	
 }
-//this adds results to individual answers
+//this adds results to individual answers, called by add_answer
 function add_result(question,answer){
 	//$("#a" + answer + "q" + question).append
 	for (var i = 1; i < results_list.length + 1; i++) {
-		$("#a" + answer + "q" + question).append("<td><input type='text' name='r" + answer + "_" + i +"_" + question + "'></input></td>")
+		$("#a" + answer + "q" + question).append("<td><input type='text' name='r" + question + "_" + i +"_" + answer + "'></input></td>")
 	}
 }
 function add_answer(question){
@@ -41,7 +40,6 @@ function add_answer(question){
 	add_result(question,questionAnswersArray[question] + 1)
 	questionAnswersArray[question]++
 	$("#questionAnswersArray").val(questionAnswersArray)
-	
 }
 function add_results(){
 	if ($("#result").val() == ""){
@@ -60,12 +58,13 @@ function add_results(){
 	for (var i =1; i < question_no +1; i++) {
 		for (var j = 1; j < questionAnswersArray[i]+1; j++){
 			//add_result(i,j)
-			$("#a" + j + "q" + i).append("<td><input type='text' name='r" + j + "_" + result_number +"_" + i + "'></input></td> ")	
+			$("#a" + j + "q" + i).append("<td><input type='text' name='r" + i + "_" + result_number +"_" + j + "'></input></td> ")	
 		}
 	}	
 	results_html += "<td>" + result + "</td>"
 	$("#All_Results").val(results_list)
 	$("#All_Results_Explanation").val(result_explanation_list)
+	$("#numResults").val(result_number)
 	}
 }
 
@@ -88,6 +87,8 @@ Result explanation <input type="text" name="explanation" id="result_explanation"
 <input type="hidden" type = 'text' id='All_Results' name='All_Results'>
 <input type="hidden" type = "text" id="All_Results_Explanation" name="All_Results_Explanation">
 <input type="hidden" type = "text" id="questionAnswersArray" name="questionAnswersArray">
+<input type="hidden" type = "text" id="numQuestions" name="numQuestions">
+<input type="hidden" type = "text" id="numResults" name="numResults">
 <div id="errorMessages"></div>
 <div id="questions"></div>
 </input>

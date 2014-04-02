@@ -9,7 +9,6 @@
 	var scoringArray = []
 	var numResults = 0
 	var resultTextArray = []
-
 </script>
 {% if request %}
 <ul>
@@ -27,10 +26,10 @@
 {% if results %}
 {% for e in results %}
 <ul>
-	<li>{{e}} {{e.Quiz_Scoring}} {{e.resultNumber}}</li> -->
+	<li>{{e.Quiz_Result}} {{e.Quiz_Scoring}} {{e.resultNumber}}</li> -->
 	<script type="text/javascript">
 		numResults++
-		resultTextArray.push("{{e}}")
+		resultTextArray.push("{{e.Quiz_Result}}")
 		resultTextArray.push("{{e.Quiz_Result_Explanation}}")
 		var formatArray = "{{e.Quiz_Scoring}}"
 		//this reformat the array, it gets rid of weird unicode stuff and keeps the results in groups
@@ -44,18 +43,21 @@
 			}
 		resultArray.push(formatArray)
 		scoringArray.push(0)
+		</script>
+	</ul>
+	{% endfor %}
+	<script type="text/javascript">
 		//document.write(resultArray)
 		for (var i = 0; i < answerArray.length; i++){
 		//the score for the result we're examining is equal to the previous score plus the score
 		//in the resultArray indexed by the answer times an offset equal to the location in the results array
 		//document.write 
-			scoringArray[numResults-1] = scoringArray[numResults-1] + parseInt(resultArray[numResults-1][answerArray[i]-1])
+			for (var j=0;j<numResults;j++){
+			scoringArray[j] = scoringArray[j] + parseInt(resultArray[j][i][answerArray[i]-1])
 			//document.write(scoringArray[numResults-1])
 	}
-
-	</script>
-</ul>
-{% endfor %}
+		}
+</script>
 <h2 id='result'>
 </h2>
 <h3 id='result_explanation'>
