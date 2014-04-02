@@ -29,6 +29,7 @@
 <ul>
 	<li>{{e}} {{e.Quiz_Scoring}} {{e.Quiz_Result_Explanation}}</li> -->
 	<script type="text/javascript">
+		numResults++
 		resultTextArray.push("{{e}}")
 		resultTextArray.push("{{e.Quiz_Result_Explanation}}")
 		var formatArray = "{{e.Quiz_Scoring}}"
@@ -42,13 +43,14 @@
 		formatArray[i] = formatArray[i].split(",")
 	}
 		resultArray.push(formatArray)
-		scoringArray.push(0)
+scoringArray.push(0)
+	document.write(resultArray)
 	for (var i = 0; i < answerArray.length; i++){
 		//the score for the result we're examining is equal to the previous score plus the score
 		//in the resultArray indexed by the answer times an offset equal to the location in the results array
-		scoringArray[numResults] = scoringArray[numResults] + parseInt(resultArray[numResults][i][answerArray[i]-1])
+		//document.write 
+		scoringArray[numResults-1] = scoringArray[numResults-1] + parseInt(resultArray[numResults-1][answerArray[i]-1])
 	}
-numResults++
 
 	</script>
 </ul>

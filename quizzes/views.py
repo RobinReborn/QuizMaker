@@ -49,7 +49,7 @@ def result(request,Quiz_Name):
 	c = {'request' : request, 'results' : results}
 	c.update(csrf(request))
 	template = loader.get_template('quizzes/result.html')
-	print results
+	#print results
 	return render_to_response('quizzes/result.html',c)
 @csrf_protect
 def created(request):
@@ -84,7 +84,7 @@ def created(request):
 		if (re.match(r'answer.*',key)):
 			answer = Answer()
 			answer.answertext = data[key]
-			print data[key]
+			#print data[key]
 			#we parse the key to find the question and answer number
 			answerNumber = key[6:string.find(key,'_')]
 			questionNumber = key[string.find(key,'_') + 2:]
@@ -92,7 +92,7 @@ def created(request):
 			question_add = quiz.questions.get(questionNumber=questionNumber)
 			answer.save()
 			question_add.answers.add(answer)
-			question_add.answers.order_by(answerNumber)
+			#question_add.answers.order_by(answerNumber)
 	#we need to order the answers
 	for key in data:
 		#we can rely in having a score value for r1_y_z, then look through y and z
@@ -109,29 +109,34 @@ def created(request):
 			result.Quiz_Result_Explanation = r_e_list[int(result_number)-1]
 			total_scoring_list = []
 			#this deals with a specific answer in the results
+			#right now the scoring list doesn't contain all the information it needs to
 			for match_key in data:
 				if (re.match(r'r1_'+result_number+'.*',match_key)):
 					#this takes us through all the scores for a particular results
 					result_scoring_list = []
 					result_scoring_list.append(data[match_key])
 					#for each question
-					for x in range(1,(int(q_a_a_list[int(question_number)])-1 )):
+					for x in range(1,(int(q_a_a_list[int(question_number)]) )):
 						#print x
-						#print match_key
+						print "appending"
+						print data['r'+str(x)+match_key[left_index:]]
 						result_scoring_list.append(data['r'+str(x)+ match_key[left_index:]])
-					#result_scoring_list.append(data['r3'+match_key[2:]])
-					#result_scoring_list.append(data['r4'+match_key[2:]])
 					total_scoring_list.append(result_scoring_list)
 			result.Quiz_Scoring = total_scoring_list
+			#print result_number
+			#print total_scoring_list
 			result.resultNumber = result_number
 			result.save()
 
 			#this needs to be modified
 			#we only add a result for the first question
-			if (re.match(r'r1_'+result_number+'_1',key)):
+			#if (re.match(r'r1_'+result_number+'_1',key)):
 			#right now we're adding this for each question
-				quiz.results.add(result)
-				quiz.save()
+			quiz.results.add(result)
+			print "saving result"
+			print result.resultNumber
+			print result.Quiz_Scoring
+			quiz.save()
 	quiz_questions = []
 	quiz_results = []
 	for q in quiz.questions.all():
