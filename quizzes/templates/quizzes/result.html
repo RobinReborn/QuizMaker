@@ -27,29 +27,30 @@
 {% if results %}
 {% for e in results %}
 <ul>
-	<li>{{e}} {{e.Quiz_Scoring}} {{e.Quiz_Result_Explanation}}</li> -->
+	<li>{{e}} {{e.Quiz_Scoring}} {{e.resultNumber}}</li> -->
 	<script type="text/javascript">
 		numResults++
 		resultTextArray.push("{{e}}")
 		resultTextArray.push("{{e.Quiz_Result_Explanation}}")
 		var formatArray = "{{e.Quiz_Scoring}}"
-		//this reformat the array, it gets rid of weird unicode stuff and keeps the results in groups of four
+		//this reformat the array, it gets rid of weird unicode stuff and keeps the results in groups
 		formatArray = formatArray.replace(/u&#39;/g, "")
 		formatArray = formatArray.replace(/&#39;/g, "")
 		formatArray = formatArray.replace("[[","")
 		formatArray = formatArray.replace("]]","")
-	formatArray = formatArray.split("], [")
-	for (var i = 0; i< formatArray.length; i++){
-		formatArray[i] = formatArray[i].split(",")
-	}
+		formatArray = formatArray.split("], [")
+			for (var i = 0; i< formatArray.length; i++){
+				formatArray[i] = formatArray[i].split(",")
+			}
 		resultArray.push(formatArray)
-scoringArray.push(0)
-	document.write(resultArray)
-	for (var i = 0; i < answerArray.length; i++){
+		scoringArray.push(0)
+		//document.write(resultArray)
+		for (var i = 0; i < answerArray.length; i++){
 		//the score for the result we're examining is equal to the previous score plus the score
 		//in the resultArray indexed by the answer times an offset equal to the location in the results array
 		//document.write 
-		scoringArray[numResults-1] = scoringArray[numResults-1] + parseInt(resultArray[numResults-1][answerArray[i]-1])
+			scoringArray[numResults-1] = scoringArray[numResults-1] + parseInt(resultArray[numResults-1][answerArray[i]-1])
+			//document.write(scoringArray[numResults-1])
 	}
 
 	</script>

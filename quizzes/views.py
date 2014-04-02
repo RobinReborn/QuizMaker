@@ -43,9 +43,12 @@ def quiz_create(request):
 def result(request,Quiz_Name):
 	quiz = Quiz.objects.get(Quiz_Title=Quiz_Name)
 	results = []
+	quiz.results.order_by('resultNumber','id')
+	quiz.save()
 	for r in quiz.results.all():
 		if (r != ','):
 			results.append(r)
+			print r.resultNumber
 	c = {'request' : request, 'results' : results}
 	c.update(csrf(request))
 	template = loader.get_template('quizzes/result.html')
@@ -94,7 +97,11 @@ def created(request):
 			question_add.answers.add(answer)
 			#question_add.answers.order_by(answerNumber)
 	#we need to order the answers
+	result_number = 0
 	for key in data:
+		result_scoring_list=[]
+		total_scoring_list=[]
+		result = Result()
 		#we can rely in having a score value for r1_y_z, then look through y and z
 		if (re.match(r'r1.*',key)):
 			#result scoring is of the form rx_y_z where x is the answer
@@ -107,31 +114,33 @@ def created(request):
 			question_number = key[right_index+1:]
 			result.Quiz_Result = r_list[int(result_number)-1]
 			result.Quiz_Result_Explanation = r_e_list[int(result_number)-1]
-			total_scoring_list = []
+			#total_scoring_list = []
 			#this deals with a specific answer in the results
 			#right now the scoring list doesn't contain all the information it needs to
-			for match_key in data:
-				if (re.match(r'r1_'+result_number+'.*',match_key)):
-					#this takes us through all the scores for a particular results
-					result_scoring_list = []
-					result_scoring_list.append(data[match_key])
-					#for each question
-					for x in range(1,(int(q_a_a_list[int(question_number)]) )):
-						#print x
-						print "appending"
-						print data['r'+str(x)+match_key[left_index:]]
-						result_scoring_list.append(data['r'+str(x)+ match_key[left_index:]])
-					total_scoring_list.append(result_scoring_list)
+			#for match_key in data:
+			#if (re.match(r'r1_'+result_number+'.*',match_key)):
+			#this takes us through all the scores for a particular results
+			result_scoring_list = []
+			#result_scoring_list.append(data[match_key])
+			#for each answer in the question
+			for x in range(0,(int(q_a_a_list[int(question_number)]) )):
+				#print x
+				print "appending to" + question_number
+				print 'r'+str(x+1)+key[left_index:]
+				print data['r'+str(x+1)+'_'+result_number+'_'+question_number]
+				result_scoring_list.append(data['r'+str(x+1)+'_'+result_number+'_'+question_number])
+				total_scoring_list.append(result_scoring_list)
 			result.Quiz_Scoring = total_scoring_list
-			#print result_number
-			#print total_scoring_list
+		#print result_number
+		#print total_scoring_list
+			result_number = int(result_number)
 			result.resultNumber = result_number
 			result.save()
-
-			#this needs to be modified
-			#we only add a result for the first question
-			#if (re.match(r'r1_'+result_number+'_1',key)):
-			#right now we're adding this for each question
+			result_number = result_number+1
+		#this needs to be modified
+		#we only add a result for the first question
+		#if (re.match(r'r1_'+result_number+'_1',key)):
+		#right now we're adding this for each question
 			quiz.results.add(result)
 			print "saving result"
 			print result.resultNumber
