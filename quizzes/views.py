@@ -19,6 +19,7 @@ def quiz(request,Quiz_Name):
 	quiz_request = Quiz.objects.get(Quiz_Title=Quiz_Name)
 	quiz_questions = []
 	quiz_answers = []
+	quiz_results = []
 	for q in quiz_request.questions.all():
 		if (q != ','):
 			quiz_questions.append(q)
@@ -27,8 +28,11 @@ def quiz(request,Quiz_Name):
 			#rather than the other way around
 			for a in Answer.objects.filter(question=q):
 				quiz_answers.append(a)
+	for r in quiz_request.results.all():
+		if (r != ','):
+			quiz_results.append(r)
 	template = loader.get_template('quizzes/quiz.html')
-	context = {'quiz_request': quiz_request, 'quiz_questions': quiz_questions, 'quiz_answers': quiz_answers}
+	context = {'quiz_request': quiz_request, 'quiz_questions': quiz_questions, 'quiz_answers': quiz_answers, 'quiz_results': quiz_results}
 	return render(request, 'quizzes/quiz.html', context)  
 
 @csrf_protect

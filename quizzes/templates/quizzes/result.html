@@ -64,6 +64,7 @@
 </h3>
 <script type="text/javascript">
 	document.write(scoringArray)
+	//if there's a tie this will give the first result
 var i = scoringArray.indexOf(Math.max.apply(Math, scoringArray))
 	$("#result").append(resultTextArray[2*i])
 	$("#result_explanation").append(resultTextArray[(2*i)+1])
