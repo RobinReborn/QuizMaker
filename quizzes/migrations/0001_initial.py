@@ -13,7 +13,7 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('Quiz_Title', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('Quiz_Description', self.gf('django.db.models.fields.CharField')(max_length=1000)),
-            ('image', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
+            ('image', self.gf('django.db.models.fields.files.ImageField')(default=None, max_length=100)),
             ('date', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
             ('timesTaken', self.gf('django.db.models.fields.IntegerField')(default=0)),
             ('Quiz_Type', self.gf('django.db.models.fields.CharField')(max_length=1000)),
@@ -42,18 +42,27 @@ class Migration(SchemaMigration):
         db.create_table(u'quizzes_question', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('question_text', self.gf('django.db.models.fields.CharField')(max_length=500)),
-            ('num_answers', self.gf('django.db.models.fields.IntegerField')()),
-            ('questionNumber', self.gf('django.db.models.fields.IntegerField')()),
-            ('image', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
+            ('num_answers', self.gf('django.db.models.fields.IntegerField')(default=0)),
+            ('questionNumber', self.gf('django.db.models.fields.IntegerField')(default=0)),
+            ('image', self.gf('django.db.models.fields.files.ImageField')(default=None, max_length=100)),
         ))
         db.send_create_signal(u'quizzes', ['Question'])
+
+        # Adding M2M table for field answers on 'Question'
+        m2m_table_name = db.shorten_name(u'quizzes_question_answers')
+        db.create_table(m2m_table_name, (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('question', models.ForeignKey(orm[u'quizzes.question'], null=False)),
+            ('answer', models.ForeignKey(orm[u'quizzes.answer'], null=False))
+        ))
+        db.create_unique(m2m_table_name, ['question_id', 'answer_id'])
 
         # Adding model 'Answer'
         db.create_table(u'quizzes_answer', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('question', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['quizzes.Question'], null=True, blank=True)),
             ('answertext', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('image', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
+            ('answerNumber', self.gf('django.db.models.fields.IntegerField')(default=0)),
+            ('image', self.gf('django.db.models.fields.files.ImageField')(default=None, max_length=100, blank=True)),
         ))
         db.send_create_signal(u'quizzes', ['Answer'])
 
@@ -64,7 +73,7 @@ class Migration(SchemaMigration):
             ('Quiz_Result', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('resultNumber', self.gf('django.db.models.fields.IntegerField')()),
             ('Quiz_Result_Explanation', self.gf('django.db.models.fields.CharField')(max_length=1000)),
-            ('image', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
+            ('image', self.gf('django.db.models.fields.files.ImageField')(default=None, max_length=100)),
         ))
         db.send_create_signal(u'quizzes', ['Result'])
 
@@ -82,6 +91,9 @@ class Migration(SchemaMigration):
         # Deleting model 'Question'
         db.delete_table(u'quizzes_question')
 
+        # Removing M2M table for field answers on 'Question'
+        db.delete_table(db.shorten_name(u'quizzes_question_answers'))
+
         # Deleting model 'Answer'
         db.delete_table(u'quizzes_answer')
 
@@ -92,17 +104,18 @@ class Migration(SchemaMigration):
     models = {
         u'quizzes.answer': {
             'Meta': {'object_name': 'Answer'},
+            'answerNumber': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'answertext': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
-            'question': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['quizzes.Question']", 'null': 'True', 'blank': 'True'})
+            'image': ('django.db.models.fields.files.ImageField', [], {'default': 'None', 'max_length': '100', 'blank': 'True'})
         },
         u'quizzes.question': {
             'Meta': {'object_name': 'Question'},
+            'answers': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['quizzes.Answer']", 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
-            'num_answers': ('django.db.models.fields.IntegerField', [], {}),
-            'questionNumber': ('django.db.models.fields.IntegerField', [], {}),
+            'image': ('django.db.models.fields.files.ImageField', [], {'default': 'None', 'max_length': '100'}),
+            'num_answers': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'questionNumber': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'question_text': ('django.db.models.fields.CharField', [], {'max_length': '500'})
         },
         u'quizzes.quiz': {
@@ -112,7 +125,7 @@ class Migration(SchemaMigration):
             'Quiz_Type': ('django.db.models.fields.CharField', [], {'max_length': '1000'}),
             'date': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
+            'image': ('django.db.models.fields.files.ImageField', [], {'default': 'None', 'max_length': '100'}),
             'questions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['quizzes.Question']", 'null': 'True', 'blank': 'True'}),
             'results': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['quizzes.Result']", 'null': 'True', 'blank': 'True'}),
             'timesTaken': ('django.db.models.fields.IntegerField', [], {'default': '0'})
@@ -123,7 +136,7 @@ class Migration(SchemaMigration):
             'Quiz_Result_Explanation': ('django.db.models.fields.CharField', [], {'max_length': '1000'}),
             'Quiz_Scoring': ('django.db.models.fields.CommaSeparatedIntegerField', [], {'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
+            'image': ('django.db.models.fields.files.ImageField', [], {'default': 'None', 'max_length': '100'}),
             'resultNumber': ('django.db.models.fields.IntegerField', [], {})
         }
     }

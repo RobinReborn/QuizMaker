@@ -20,15 +20,16 @@ def quiz(request,Quiz_Name):
 	quiz_questions = []
 	quiz_answers = []
 	quiz_results = []
-	for q in quiz_request.questions.all():
+	for q in quiz_request.questions.all().order_by('questionNumber'):
 		if (q != ','):
 			quiz_questions.append(q)
 			#right now we're going through all the answers
 			#we could change the model to have answers belong to questions
 			#rather than the other way around
-			for a in Answer.objects.filter(question=q):
+			for a in Answer.objects.filter(question=q).order_by('answerNumber'):
 				quiz_answers.append(a)
-	for r in quiz_request.results.all():
+				#print a.answerNumber
+	for r in quiz_request.results.all().order_by('resultNumber'):
 		if (r != ','):
 			quiz_results.append(r)
 	template = loader.get_template('quizzes/quiz.html')

@@ -20,6 +20,8 @@ class Question(models.Model):
 	answers = models.ManyToManyField('Answer',null=True,blank=True)
 	def __unicode__(self):
 		return unicode(self.question_text)
+	def sortAnswers(self):
+		return self.answers.all().order_by('answerNumber')
 class Answer(models.Model):
 	#question = models.ForeignKey('Question',null=True,blank=True)
 	answertext = models.CharField(max_length=100)
