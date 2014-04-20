@@ -8,16 +8,19 @@
 	function computeResults(answer,question,operation){
 		if(operation=="add"){
 			for (var i = 0 ;i<numResults;i++){
-				//for (var j =0; j<scoring.length;j++){
-					$("#r"+(i+1)).text((parseInt($("#r"+(i+1)).text())) + parseInt(scoringArray[i][question-1][answer-1]))
+				//this sets the value of the displayed result to be the value of the current result
+				//plus the value in the scoring array corresponding to the results,question and answer
+				$("#r"+(i+1)).text(parseInt($("#r"+(i+1)).text()) + parseInt(scoringArray[i][question-1][answer-1]))
+				//	$("#r1").text(parseInt($("#r1").text()) - parseInt(scoringArray[0][0][answerArray[0]-1]))
 				//}
 			}
 		}
 			else{
 				for (var i =0; i<numResults;i++){
-					$("#r"+(i+1)).text((parseInt($("#r"+(i+1)).text())) - parseInt(scoringArray[i][question-1][answerArray[answer-1]-1]))
+					//if (answerArray[answer] != 0){
+					$("#r"+(i+1)).text(parseInt($("#r"+(i+1)).text()) - parseInt(scoringArray[i][question-1][answer-1]))
 			}
-		
+				//}
 			}
 	}
 
@@ -27,7 +30,7 @@
 		//is this the first time the user has answered the question?
 		//assumes all result values are positive
 		if(answerArray[questionNumber-1]!=0){
-			computeResults(answer,questionNumber,"subtract")
+			computeResults(answerArray[questionNumber-1],questionNumber,"subtract")
 			answerArray[questionNumber-1] = parseInt(answer)
 		}
 		answerArray[questionNumber-1] = parseInt(answer)
