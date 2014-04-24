@@ -42,6 +42,8 @@ def quiz_create(request):
 	c.update(csrf(request))
 	template = loader.get_template('quizzes/quiz_create.html')
     #return render(request,'quizzes/quiz_create.html')
+	print "working?"
+	print c
 	return render_to_response("quizzes/quiz_create.html", c)
 
 @csrf_protect

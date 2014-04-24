@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-
+APPEND_SLASH=True
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
@@ -26,7 +26,7 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+INTERNAL_IPS = ('74.104.35.203',)
 # Application definition
 
 INSTALLED_APPS = (
@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'south',
     'quizzes',
+	'debug_toolbar',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -47,7 +48,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
+'debug_toolbar.middleware.DebugToolbarMiddleware',
+	)
 
 ROOT_URLCONF = 'quizmaker.urls'
 
