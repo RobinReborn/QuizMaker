@@ -10,12 +10,6 @@ var result_explanation_list = []
 var questionAnswersArray = []
 function add_question(){
 	question_no++
-	var html_question_begining = "<div id='q"
-	var html_question_middle = "'><table border=2 id='tq" + question_no + "'><tr class='results' id='resultsq" + question_no + "'><td><button type='button' onclick='add_answer(" + question_no + ");'>Add Answer </button> </td></tr><tr><td>Question<input id='question"
-	//here will need to change based on the quiz type
-	var html_question_end = "' name='question" + question_no + "' ></input><br/></td></tr> <tr class='a1' id='a1q" + question_no + "'>"//<td>Answer1<input id='option1button' name='answer1_q" + question_no + "'></input><br/>     </td></tr><tr class='a2' id='a2q" + question_no + "'><td>Answer2<input id='option2button' name='answer2_q" + question_no + "'></input>"
-	$("#questions").append(html_question_begining + question_no + html_question_middle + question_no +  html_question_end)
-	results_no = "#resultsq" + question_no
 	if ($("#defaultAnswersNumber").val() != "")
 	{
 		questionAnswersArray[question_no] = $("#defaultAnswersNumber").val()
@@ -24,9 +18,18 @@ function add_question(){
 	{
 		questionAnswersArray[question_no] = 4
 	}
-	for (var i = 1; i < questionAnswersArray[question_no];i++)
+	
+	var html_question_begining = "<div id='q"
+	var html_question_middle = "'><table border=2 id='tq" + question_no + "'><tr class='results' id='resultsq" + question_no + "'><td><button type='button' onclick='add_answer(" + question_no + ");'>Add Answer </button> </td></tr><tr><td>Question<input id='question"
+	//here will need to change based on the quiz type
+	var html_question_end = "' name='question" + question_no + "' ></input><br/></td></tr>" 
+	//<tr class='a1' id='a1q" + question_no + "'>"//<td>Answer1<input id='option1button' name='answer1_q" + question_no + "'></input><br/>     </td></tr><tr class='a2' id='a2q" + question_no + "'><td>Answer2<input id='option2button' name='answer2_q" + question_no + "'></input>"
+	$("#questions").append(html_question_begining + question_no + html_question_middle + question_no +  html_question_end)
+	results_no = "#resultsq" + question_no
+	for (var i = 1; i < questionAnswersArray[question_no]+1;i++)
 	{	
-		add_answer(question_no)
+		add_answer(question_no,i)
+		questionAnswersArray[question_no]--
 	}		
 	for (var i = 1; i < results_list.length + 1; i++)
 	{
@@ -45,9 +48,9 @@ function add_result(question,answer){
 		$("#a" + answer + "q" + question).append("<td><input type='text' name='r" + question + "_" + i +"_" + answer + "'></input></td>")
 	}
 }
-function add_answer(question){
-	var answersInQuestion = 1+questionAnswersArray[question]
-	$("#tq" + question).append("<tr class ='a" + answersInQuestion + "' id='a" + answersInQuestion + "q" + question + "'><td>Answer" + answersInQuestion + "<input name='answer" + answersInQuestion + "_q" + question + "'></input><br/></td></tr>")
+function add_answer(question,answernum){
+	answernum = answernum || questionAnswersArray[question]
+	$("#tq" + question).append("<tr class ='a" + answernum + "' id='a" + answernum + "q" + question + "'><td>Answer" + answernum + "<input name='answer" + answernum + "_q" + question + "'></input><br/></td></tr>")
 	add_result(question,questionAnswersArray[question] + 1)
 	questionAnswersArray[question]++
 	$("#questionAnswersArray").val(questionAnswersArray)
