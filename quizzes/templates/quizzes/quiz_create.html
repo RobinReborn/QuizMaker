@@ -19,12 +19,17 @@ function add_question(){
 		questionAnswersArray[question_no] = 4
 	}
 	
-	var html_question_begining = "<div id='q"
-	var html_question_middle = "'><table border=2 id='tq" + question_no + "'><tr class='results' id='resultsq" + question_no + "'><td><button type='button' onclick='add_answer(" + question_no + ");'>Add Answer </button> </td></tr><tr><td>Question<input id='question"
-	//here will need to change based on the quiz type
-	var html_question_end = "' name='question" + question_no + "' ></input><br/></td></tr>" 
+	var div = "<div id='q" + question_no
+		var table = "'><table border=2 id='tq" + question_no + "'><tr class='results' id='resultsq" + question_no + "'>"
+		var buttons = "<td><button type='button' onclick='add_answer(" + question_no + ");'>Add Answer </button><button type ='button' onclick='remove_answer(" + question_no + ");'>Remove Answer </button></td>" 
+		var endtable = "</tr><tr><td>Question<input id='question" + question_no +  "' name='question" + question_no + "' ></input><br/></td></tr>" 
 	//<tr class='a1' id='a1q" + question_no + "'>"//<td>Answer1<input id='option1button' name='answer1_q" + question_no + "'></input><br/>     </td></tr><tr class='a2' id='a2q" + question_no + "'><td>Answer2<input id='option2button' name='answer2_q" + question_no + "'></input>"
-	$("#questions").append(html_question_begining + question_no + html_question_middle + question_no +  html_question_end)
+		if ($("#defaultAnswersNumber").val() == 0){
+		$("#questions").append(div + table + endtable)
+			}
+	else{	
+		$("#questions").append(div + table + buttons + endtable)
+	}
 	results_no = "#resultsq" + question_no
 	for (var i = 1; i < questionAnswersArray[question_no]+1;i++)
 	{	
@@ -41,6 +46,10 @@ function add_question(){
 	$("#questionAnswersArray").val(questionAnswersArray)
 	$("#numQuestions").val(question_no)	
 }
+function remove_question(){
+	$("#q" + question_no).remove()
+	question_no--
+}
 //this adds results to individual answers, called by add_answer
 function add_result(question,answer){
 	//$("#a" + answer + "q" + question).append
@@ -49,11 +58,20 @@ function add_result(question,answer){
 	}
 }
 function add_answer(question,answernum){
+	questionAnswersArray[question]++
 	answernum = answernum || questionAnswersArray[question]
 	$("#tq" + question).append("<tr class ='a" + answernum + "' id='a" + answernum + "q" + question + "'><td>Answer" + answernum + "<input name='answer" + answernum + "_q" + question + "'></input><br/></td></tr>")
-	add_result(question,questionAnswersArray[question] + 1)
-	questionAnswersArray[question]++
+	add_result(question,questionAnswersArray[question])
+		$("#questionAnswersArray").val(questionAnswersArray)
+}
+function remove_answer(question){
+	if (questionAnswersArray[question] < 3){
+		$("#errorMessages").append("questions must have at least two answers!")
+	}
+	else {$("#a"+questionAnswersArray[question]+"q"+question).remove()	
 	$("#questionAnswersArray").val(questionAnswersArray)
+	questionAnswersArray[question]--
+	}
 }
 function add_results(){
 	if ($("#result").val() == ""){
@@ -88,7 +106,8 @@ function add_results(){
 		}
 		else
 		{
-		$("#resultsSpecify").hide()
+			$("#resultsSpecify").hide()
+			$("#defaultAnswersNumber").val(0)
 		}
 		}
 	function hideResults()
@@ -108,23 +127,52 @@ function add_results(){
 		$("#resultExplanationName").show()
 	
 	}
-
+	function hideQuizOptions(){
+		$("#QuizOptions").hide()
+		}
+	function showQuizOptions(){
+		$("#QuizOptions").show()
+	}
+	function addQuestions(){
+		var questionsToAdd = parseInt($("#numberOfQuestions").val())
+		for (var i =1 ; i < questionsToAdd+1; i++){
+			add_question()
+		}
+	}
 </script>
 <body><!-- onload="add_question()">--!>
 	<h2>Welcome to Quiz Creator!</h2>
 	<h3>First let's clarify what sort of a quiz you want to create</h3>
 	<br/><br/>
-	<h3>Do you want your quiz to be a checklist of items which when filled out tells the user how many items they checked?</h3>
+	<h3>Do you want the default Quiz Options?</h3>
+	<br/><br/>
+	<input type='radio' name='defaultQuiz'  value='Yes' onclick="hideQuizOptions()">Yes</input>
+	<input type='radio' name='defaultQuiz' value='No' onclick="showQuizOptions()">No</input>
+	<br/><br/>
+	<div id = 'QuizOptions' style="display: none">
+	Do you want your quiz to be a checklist of items which when filled out tells the user how many items they checked?
 	<input type='radio' name='checklist' value='Yes' onclick="toggleChecklist();">Yes</input>
 	<input type='radio' name='checklist' value='No' onclick="toggleChecklist();">No</input>
+	<br/><br/>
 	<div id = 'resultsSpecify'>
-		<h3>Will each question have one answer leading to a percentage correct or do you want a quiz with scores for multiple possible results?</h3>
-		<input type='radio' name='typeResults' onclick="hideResults();">Just one result, scored by number of questions correct</input>
+		Will each question have one answer leading to a percentage correct or do you want a quiz with scores for multiple possible results?
 		<br/>
-	<input type='radio' name='typeResults' onclick="showResults();">Multiple Results, answers to questions add points to different possible results</input>
+		<input type='radio' name='typeResults' value='oneResult' onclick="hideResults();">Just one result, scored by number of questions correct</input>
+		<br/>
+	<input type='radio' name='typeResults' value = 'manyResults' onclick="showResults();">Multiple Results, answers to questions add points to different possible results</input>
 	<br/><br/>How many answers do you want per question?
-<input type='number' name='defaultAnswersNumber' id ='defaultAnswersNumber'></input>
-</div>
+	<input type='number' name='defaultAnswersNumber' id ='defaultAnswersNumber' value =4></input>
+	<br/><br/>Do you want users to see all the possible results?<br/>
+	<input type='radio' name ='showResults' value = 'hideResultsUntilEnd'>Not until they finish the quiz</input><br/>
+	<input type='radio' name='showResults' value = 'hideResults'>Only show them their result when they are done with the quiz</input><br/>
+	<input type='radio' name='showResults' value='showResults'>Show them the possible results as they take the quiz</input><br/><br/></div>
+	Do you want dynamic scoring (the user sees how each answer affects their score)
+	<br/><input type='radio' name='dynamicScoring' value='dynamicScoring'>Yes, give them immediate feedback</input><br/>
+<input type='radio' name='dynamicScoring' value='normalScoring'>No, they have to Answer every question and submit to get a result</input><br/>
+	</div>
+	<br/>
+	How many questions do you want your quiz to have? (You can add or remove questions after you set this)
+	<input type='number' name='numberOfQuestions' id='numberOfQuestions' value = 10 onchange="addQuestions()"></input>
 	<!--<h3>Begin by naming and describing your questions in the fields next to Quiz name and Quiz description</h3><br/>
 	<h3>Then start adding results or questions</h3><br/>
 	<h3>To add a question, first type in the question then each of the possible answers, click the add question button to add another question</h3><br/>
@@ -147,5 +195,6 @@ Quiz description: <input type="text" name="Quiz_Description">
 </input>
 
 <button type="button" onclick="add_question();">Add another question</button>
+<button type="button" onclick="remove_question()">Remove last question</button>
 <input type="submit" value="Submit Quiz" /></form>
 </body>
