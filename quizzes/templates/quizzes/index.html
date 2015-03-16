@@ -5,55 +5,7 @@
         <li><a href="/quizzes/{{ quiz.Quiz_Title }}/">{{ quiz.Quiz_Title }}</a>  {{ quiz.Quiz_Description }}</li>
     {% endfor %}
 </ul>
-<!--import math
-#this program converts a number (integer or string) into its spoken word equivalent
 
-#these arrays store the values of numbers
-ones = ['','one','two','three','four','five','six','seven','eight','nine']
-teens = ['ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen']
-tens = ['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety']
-order = ['','thousand','million','billion','trillion']
-
-def nameNumber(number):
-	num = str(number)
-	mag = len(num)
-	print mag
-	#if our number is less than 1000, we call the function that converts it to a word
-	if (mag < 4):
-		return nameNumberLess1000(number)
-	#if our number has digits exactly divisible by three, we convert the first three and add the prefix
-	#then recursively call nameNumber on the rest of the number
-	elif (mag%3==0):
-		return nameNumberLess1000(num[:3]) + " " + order[mag/3] + " " + nameNumber(num[3:])
-	#if we don't have digits evenly divisble by three, we know the first one or two digits have their own prefix
-	else:
-		return nameNumberLess1000(num[:mag%3]) + " " + order[(mag/3)+1] + " " + nameNumber(num[mag%3:])
-def nameNumberLess1000(number):
-	numberWord = ""
-	# we need to assign the hundreds, tens and ones place depending on the length of the number
-	if (len(number) == 3):
-		hundred = number[0]
-		ten = number[1]
-		one = number[2]
-	elif (len(number) == 2):
-		hundred = '0'
-		ten = number[0]
-		one = number[1]
-	else:
-		hundred = '0'
-		ten = '0'
-		one = number[0]
-	if (hundred != '0'):
-		numberWord += ones[int(hundred)] + " " + "hundred "
-	#teens are a special case
-	if (ten == '1'):
-		numberWord += teens[int(one)]
-	else:
-		if (ten != '0'):
-			numberWord += tens[int(ten)] + " "
-		if (one != '0'):
-			numberWord += ones[int(one)]
-			return numberWord -->
 {% else %}
     <p>No quizzes are available.</p>
 {% endif %}
