@@ -1,3 +1,8 @@
+{% extends "base.html" %}
+
+{% block quiz_list %}
+
+
 {%if quiz_list %}
     <ul>
 	<li>test</li>
@@ -9,3 +14,4 @@
 {% else %}
     <p>No quizzes are available.</p>
 {% endif %}
+{% endblock %}
