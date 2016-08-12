@@ -3,17 +3,27 @@ from django.http import HttpResponse
 from quizzes.models import *
 from django.template import RequestContext, loader
 from django.views.decorators.csrf import csrf_protect
+from django.views.decorators import csrf
+
 from django.shortcuts import render_to_response
 import re
 import string
 #from helper_functions import process_Quiz
 from django.http import QueryDict
-from django.core.context_processors import csrf
+#from django.template.context_processors import csrf
+#from django.template import Context
+from django.template.loader import get_template
+from django.template import Template
+
+
 def index(request):
-    quiz_list = Quiz.objects.all()
-    template = loader.get_template('quizzes/index.html')
-    context = {'quiz_list': quiz_list}
-    return render(request, 'quizzes/index.html', context)
+	print "in index"
+	quiz_list = Quiz.objects.all()
+	#template = loader.get_template('quizzes/index.html')
+	context = {'quiz_list': quiz_list}
+	#return render(request, 'quizzes/index.html', context)
+	#template = get_template('quizzes/index.html')
+	return render(request, 'quizzes/index.html', context)
 @csrf_protect
 def quiz(request,Quiz_Name):
 	quiz_request = Quiz.objects.get(Quiz_Title=Quiz_Name)
@@ -39,11 +49,10 @@ def quiz(request,Quiz_Name):
 @csrf_protect
 def quiz_create(request):
 	c = {'request' : request}
-	c.update(csrf(request))
+	print "in quiz create \n"
+	#c.update(csrf(request))
 	template = loader.get_template('quizzes/quiz_create.html')
     #return render(request,'quizzes/quiz_create.html')
-	print "working?"
-	print c
 	return render_to_response("quizzes/quiz_create.html", c)
 
 @csrf_protect

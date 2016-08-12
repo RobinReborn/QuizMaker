@@ -22,7 +22,7 @@ SECRET_KEY = 'm(7i1(h#)co%w^n^nd!zprgafwa5din*&dd4#r+k^pwfik+7^s'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
+#TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -36,9 +36,37 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'south',
     'quizzes',
 )
+TEMPLATES = [
+    {
+
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            "/quizzes/templates"
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                #'allauth.account.context_processors.account',
+                #'allauth.socialaccount.context_processors.socialaccount',
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
+                #'django.template.context_processors.base_url',
+
+
+            ],
+
+        },
+    },
+]
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -58,10 +86,21 @@ WSGI_APPLICATION = 'quizmaker.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#    }
+#}
+DATABASES = {}
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'quizzes',
+        'USER': 'robin',
+        'PASSWORD': 'regulator',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
     }
 }
 
