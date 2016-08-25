@@ -9,7 +9,8 @@ urlpatterns = [
     # Examples:
     # url(r'^$', 'quizmaker.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
-    url("",views.index, name='index'),
-    url(r'^quizzes/', include('quizzes.urls', namespace="quizzes")),
+    url(r'^quizzes/', include('quizzes.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^$',views.index, name='index'),
+
 ]

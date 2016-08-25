@@ -1,8 +1,9 @@
 
 
 from django.conf.urls import url
-from quizzes import views
+from . import views
 
+app_name = 'quizzes'
 urlpatterns = [
     url(r'^create/created', views.created, name = 'created'),
     url(r'^create/$', views.quiz_create, name='quiz_create'),

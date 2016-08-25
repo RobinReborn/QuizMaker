@@ -1,0 +1,205 @@
+{% extends 'quizzes/base.html' %}
+
+test quiz creat
+e{% block content %}
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript">
+var question_no = 0
+var results_html = ""
+var results_list = []
+var result_number = 0
+var result_no = ""
+var result_explanation_list = []
+//stores how many answers are in each question
+var questionAnswersArray = []
+function add_question(){
+	question_no++
+	if ($("#defaultAnswersNumber").val() != "")
+	{
+		questionAnswersArray[question_no] = $("#defaultAnswersNumber").val()
+	}
+	else
+	{
+		questionAnswersArray[question_no] = 4
+	}
+	
+	var div = "<div id='q" + question_no
+		var table = "'><table border=2 id='tq" + question_no + "'><tr class='results' id='resultsq" + question_no + "'>"
+		var buttons = "<td><button type='button' onclick='add_answer(" + question_no + ");'>Add Answer </button><button type ='button' onclick='remove_answer(" + question_no + ");'>Remove Answer </button></td>" 
+		var endtable = "</tr><tr><td>Question<input id='question" + question_no +  "' name='question" + question_no + "' ></input><br/></td></tr>" 
+	//<tr class='a1' id='a1q" + question_no + "'>"//<td>Answer1<input id='option1button' name='answer1_q" + question_no + "'></input><br/>     </td></tr><tr class='a2' id='a2q" + question_no + "'><td>Answer2<input id='option2button' name='answer2_q" + question_no + "'></input>"
+		if ($("#defaultAnswersNumber").val() == 0){
+		$("#questions").append(div + table + endtable)
+			}
+	else{	
+		$("#questions").append(div + table + buttons + endtable)
+	}
+	results_no = "#resultsq" + question_no
+	for (var i = 1; i < questionAnswersArray[question_no]+1;i++)
+	{	
+		add_answer(question_no,i)
+		questionAnswersArray[question_no]--
+	}		
+	for (var i = 1; i < results_list.length + 1; i++)
+	{
+		$(results_no).append("<td title='" + result_explanation_list[i-1] + "'>" + results_list[i-1] +  "</td>")  
+	}
+	for (var i = 1; i < questionAnswersArray[question_no]+1; i++) {
+		add_result(question_no,i)	
+	}
+	$("#questionAnswersArray").val(questionAnswersArray)
+	$("#numQuestions").val(question_no)	
+}
+function remove_question(){
+	$("#q" + question_no).remove()
+	question_no--
+}
+//this adds results to individual answers, called by add_answer
+function add_result(question,answer){
+	//$("#a" + answer + "q" + question).append
+	for (var i = 1; i < results_list.length + 1; i++) {
+		$("#a" + answer + "q" + question).append("<td><input type='text' name='r" + question + "_" + i +"_" + answer + "'></input></td>")
+	}
+}
+function add_answer(question,answernum){
+	questionAnswersArray[question]++
+	answernum = answernum || questionAnswersArray[question]
+	$("#tq" + question).append("<tr class ='a" + answernum + "' id='a" + answernum + "q" + question + "'><td>Answer" + answernum + "<input name='answer" + answernum + "_q" + question + "'></input><br/></td></tr>")
+	add_result(question,questionAnswersArray[question])
+		$("#questionAnswersArray").val(questionAnswersArray)
+}
+function remove_answer(question){
+	if (questionAnswersArray[question] < 3){
+		$("#errorMessages").append("questions must have at least two answers!")
+	}
+	else {$("#a"+questionAnswersArray[question]+"q"+question).remove()	
+	$("#questionAnswersArray").val(questionAnswersArray)
+	questionAnswersArray[question]--
+	}
+}
+function add_results(){
+	if ($("#result").val() == ""){
+		if ($("#errorMessages").text() != "Give your Result a name!"){
+			$("#errorMessages").append("Give your Result a name!")
+		}
+	}
+	else{
+		$("#errorMessages").empty()
+	result_number++
+	var result = $("#result").val()
+	results_list.push(result)
+	var result_explanation = $("#result_explanation").val()
+	result_explanation_list.push(result_explanation)
+	$(".results").append("<td title='"+ result_explanation  + "'>"  +result+"</td>")
+	for (var i =1; i < question_no +1; i++) {
+		for (var j = 1; j < questionAnswersArray[i]+1; j++){
+			$("#a" + j + "q" + i).append("<td><input type='text' name='r" + i + "_" + result_number +"_" + j + "'></input></td> ")	
+		}
+	}	
+	results_html += "<td>" + result + "</td>"
+	$("#All_Results").val(results_list)
+	$("#All_Results_Explanation").val(result_explanation_list)
+	$("#numResults").val(result_number)
+	}
+}
+	function toggleChecklist(){
+	//$("input[name='checklist']").click(function(){
+		if ($("input[name='checklist']:checked").val() === 'No')
+		{
+		$("#resultsSpecify").show()
+		}
+		else
+		{
+			$("#resultsSpecify").hide()
+			$("#defaultAnswersNumber").val(0)
+		}
+		}
+	function hideResults()
+	{	$("#resultButton").hide()
+		$("#result").hide()
+		$("#result_explanation").hide()
+		$("#resultName").hide()
+		$("#resultExplanationName").hide()
+	
+	}
+	function showResults()
+	{
+		$("#resultButton").show()
+		$("#result").show()
+		$("#result_explanation").show()
+		$("#resultName").show()
+		$("#resultExplanationName").show()
+	
+	}
+	function hideQuizOptions(){
+		$("#QuizOptions").hide()
+		}
+	function showQuizOptions(){
+		$("#QuizOptions").show()
+	}
+	function addQuestions(){
+		var questionsToAdd = parseInt($("#numberOfQuestions").val())
+		for (var i =1 ; i < questionsToAdd+1; i++){
+			add_question()
+		}
+	}
+</script>
+<body><onload="add_question()">
+	<h2>Welcome to Quiz Creator!</h2>
+	<h3>First let's clarify what sort of a quiz you want to create</h3>
+	<br/><br/>
+	<h3>Do you want the default Quiz Options?</h3>
+	<br/><br/>
+	<input type='radio' name='defaultQuiz'  value='Yes' onclick="hideQuizOptions()">Yes</input>
+	<input type='radio' name='defaultQuiz' value='No' onclick="showQuizOptions()">No</input>
+	<br/><br/>
+	<div id = 'QuizOptions' style="display: none">
+	Do you want your quiz to be a checklist of items which when filled out tells the user how many items they checked?
+	<input type='radio' name='checklist' value='Yes' onclick="toggleChecklist();">Yes</input>
+	<input type='radio' name='checklist' value='No' onclick="toggleChecklist();">No</input>
+	<br/><br/>
+	<div id = 'resultsSpecify'>
+		Will each question have one answer leading to a percentage correct or do you want a quiz with scores for multiple possible results?
+		<br/>
+		<input type='radio' name='typeResults' value='oneResult' onclick="hideResults();">Just one result, scored by number of questions correct</input>
+		<br/>
+	<input type='radio' name='typeResults' value = 'manyResults' onclick="showResults();">Multiple Results, answers to questions add points to different possible results</input>
+	<br/><br/>How many answers do you want per question?
+	<input type='number' name='defaultAnswersNumber' id ='defaultAnswersNumber' value =4></input>
+	<br/><br/>Do you want users to see all the possible results?<br/>
+	<input type='radio' name ='showResults' value = 'hideResultsUntilEnd'>Not until they finish the quiz</input><br/>
+	<input type='radio' name='showResults' value = 'hideResults'>Only show them their result when they are done with the quiz</input><br/>
+	<input type='radio' name='showResults' value='showResults'>Show them the possible results as they take the quiz</input><br/><br/></div>
+	Do you want dynamic scoring (the user sees how each answer affects their score)
+	<br/><input type='radio' name='dynamicScoring' value='dynamicScoring'>Yes, give them immediate feedback</input><br/>
+<input type='radio' name='dynamicScoring' value='normalScoring'>No, they have to Answer every question and submit to get a result</input><br/>
+	</div>
+	<br/>
+	How many questions do you want your quiz to have? (You can add or remove questions after you set this)
+	<input type='number' name='numberOfQuestions' id='numberOfQuestions' value = 10 onchange="addQuestions()"></input>
+	<<h3>Begin by naming and describing your questions in the fields next to Quiz name and Quiz description</h3><br/>
+	<h3>Then start adding results or questions</h3><br/>
+	<h3>To add a question, first type in the question then each of the possible answers, click the add question button to add another question</h3><br/>
+	<h3>A result is what a user will get when they're done with the quiz, each pair of answers and results has an input associated with it which signifies how many points towards that result the user will get for selecting that answer, when the user is finished with the quiz their result will be the result which they scored highest on</h3>
+	--!>
+<form action="created/" method="post"> 
+{% csrf_token %}
+Quiz name:<input type="text" name="Quiz_Name" required> 
+<label id='resultName'>Result name:</label> <input type="text" id="result" required ></input> <button type = "button" id="resultButton" onclick="add_results();">
+Add another Result</button><br>
+Quiz description: <input type="text" name="Quiz_Description">
+<label id='resultExplanationName'>Result explanation</label> <input type="text" name="explanation" id="result_explanation"></input> <br>
+<input type="hidden" type = 'text' id='All_Results' name='All_Results'>
+<input type="hidden" type = "text" id="All_Results_Explanation" name="All_Results_Explanation">
+<input type="hidden" type = "text" id="questionAnswersArray" name="questionAnswersArray">
+<input type="hidden" type = "text" id="numQuestions" name="numQuestions">
+<input type="hidden" type = "text" id="numResults" name="numResults">
+<div id="errorMessages"></div>
+<div id="questions"></div>
+</input>
+
+<button type="button" onclick="add_question();">Add another question</button>
+<button type="button" onclick="remove_question()">Remove last question</button>
+<input type="submit" value="Submit Quiz" /></form>
+</body>
+{% endblock %}

@@ -1,12 +1,14 @@
 <head>
-{% load staticfiles %}
-<link rel="stylesheet" type="text/css" href= "/static/styles.css" />
+{% load static %}
+<link rel="stylesheet" href= "{% static 'quizzes/styles.css' %}" />
 </head>
+<body>
+<!-- we'll add headers and footers -->
 
-test
 {% block content %}
 
-test
+
 
 
 {% endblock %}
+</body>

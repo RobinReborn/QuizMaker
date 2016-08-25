@@ -1,5 +1,9 @@
-body
+body {
+	
+	background-color: blue;
+}
+.question
 {
-background-color: lightblue
-
+	width: 100em;
+	height: 4em;
 }

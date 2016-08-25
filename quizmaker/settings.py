@@ -122,10 +122,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 #MEDIA_ROOT = '/images/'
 #MEDIA_URL = '/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
+#STATICFILES_DIRS = (
+#    os.path.join(BASE_DIR, "/"),
+#)
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/home/robin/workspace/quizmaker/quizmaker/static/'
+#STATIC_ROOT= os.path.join(BASE_DIR, "quizzes/static")
+STATIC_ROOT=    '/home/robin/workspace/quizmaker/static'
+STATICFILES_DIRS = ( os.path.join(BASE_DIR, "quizzes/static"), )
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    #'django.contrib.staticfiles.finders.AppDirectoriesFinder',    #causes verbose duplicate notifications in django 1.9
+)
 

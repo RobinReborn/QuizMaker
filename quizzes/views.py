@@ -48,6 +48,7 @@ def quiz(request,Quiz_Name):
 
 @csrf_protect
 def quiz_create(request):
+	print "in quiz create"
 	c = {'request' : request}
 	print "in quiz create \n"
 	#c.update(csrf(request))
