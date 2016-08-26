@@ -2,8 +2,26 @@ body {
 	
 	background-color: blue;
 }
-.question 
+.question
 {
-	width:  100em;
-	height: 4em;
+	width: 75em;
+	height: 3em;
+}
+#user_input
+{
+	text-align: center;
+}
+#Quiz_Name
+{
+	font-size:24px;
+	width: 35em;
+}
+#Quiz_Description
+{
+	width: 60em;
+	height: 3em;
+}
+.questionNumbering
+{
+	text-align: left;
 }

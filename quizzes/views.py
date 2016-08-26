@@ -13,7 +13,7 @@ from django.http import QueryDict
 #from django.template.context_processors import csrf
 #from django.template import Context
 from django.template.loader import get_template
-from django.template import Template
+from django.template import Template, RequestContext
 
 
 def index(request):
@@ -24,7 +24,7 @@ def index(request):
 	#return render(request, 'quizzes/index.html', context)
 	#template = get_template('quizzes/index.html')
 	return render(request, 'quizzes/index.html', context)
-@csrf_protect
+#@csrf_protect
 def quiz(request,Quiz_Name):
 	quiz_request = Quiz.objects.get(Quiz_Title=Quiz_Name)
 	quiz_questions = []
@@ -46,17 +46,21 @@ def quiz(request,Quiz_Name):
 	context = {'quiz_request': quiz_request, 'quiz_questions': quiz_questions, 'quiz_answers': quiz_answers, 'quiz_results': quiz_results}
 	return render(request, 'quizzes/quiz.html', context)  
 
-@csrf_protect
+#@csrf_protect
 def quiz_create(request):
-	print "in quiz create"
+	#print "in quiz create"
 	c = {'request' : request}
-	print "in quiz create \n"
+	#print "in quiz create \n"
 	#c.update(csrf(request))
+	#print c
 	template = loader.get_template('quizzes/quiz_create.html')
-    #return render(request,'quizzes/quiz_create.html')
-	return render_to_response("quizzes/quiz_create.html", c)
-
-@csrf_protect
+    #return render(request,'quizzes/quiz_create.html')print c
+	return render(request,"quizzes/quiz_create.html", c)
+def add_answers(request):
+	c = {'request' : request}
+	template = loader.get_template('quizzes/quiz_create.html')
+	return render(request,"quizzes/add_answers.html", c)
+#@csrf_protect
 def result(request,Quiz_Name):
 	quiz = Quiz.objects.get(Quiz_Title=Quiz_Name)
 	results = []
@@ -70,9 +74,10 @@ def result(request,Quiz_Name):
 	c.update(csrf(request))
 	template = loader.get_template('quizzes/result.html')
 	#print results
-	return render_to_response('quizzes/result.html',c)
-@csrf_protect
+	return render(request,'quizzes/result.html',c)
+#@csrf_protect
 def created(request):
+	print "in created"
 	data = request.POST.dict()
 	template = loader.get_template('quizzes/quiz_created.html')
     #here we do some stuff to add the quiz, questions and results to our DB
@@ -80,63 +85,63 @@ def created(request):
 	quiz.Quiz_Title = request.POST['Quiz_Name']
 	quiz.Quiz_Description = request.POST['Quiz_Description']
 	quiz.save()
-	Results_List = data['All_Results']
-	Results_Explanation_List = data['All_Results_Explanation']
-	questionAnswersArray = data['questionAnswersArray']
-	q_a_a_list = questionAnswersArray.split(",")
-	r_list = Results_List.split(",")
-	r_e_list = Results_Explanation_List.split(",")
+	#Results_List = data['All_Results']
+	#Results_Explanation_List = data['All_Results_Explanation']
+	#questionAnswersArray = data['questionAnswersArray']
+	#q_a_a_list = questionAnswersArray.split(",")
+	#r_list = Results_List.split(",")
+	#r_e_list = Results_Explanation_List.split(",")
 	total_questions = int(data['numQuestions'])
-	total_results = int(data['numResults'])
-	questions =1
-	for key in data:
+	#total_results = int(data['numResults'])
+	#questions =1
+	#for key in data:
 		#this deals with the questions
 		
-		if (re.match(r'question\d',key)):
-			question = Question()
-			question.question_text = data[key]
-			question.questionNumber = questions
-			question.num_Answers = q_a_a_list[questions-1]
-			question.save()
-			quiz.questions.add(question)
-			questions = questions+1
+	#	if (re.match(r'question\d',key)):
+	#		question = Question()
+	#		question.question_text = data[key]
+	#		question.questionNumber = questions
+	#		question.num_Answers = q_a_a_list[questions-1]
+	#		question.save()
+	#		quiz.questions.add(question)
+	#		questions = questions+1
 	quiz.save()
-	for key in data:
+	#for key in data:
 		#this deals with answers
-		if (re.match(r'answer.*',key)):
-			answer = Answer()
-			answer.answertext = data[key]
+	#	if (re.match(r'answer.*',key)):
+	#		answer = Answer()
+	#		answer.answertext = data[key]
 			#print data[key]
 			#we parse the key to find the question and answer number
-			answerNumber = key[6:string.find(key,'_')]
-			questionNumber = key[string.find(key,'_') + 2:]
-			answer.answerNumber = answerNumber
-			#maybe not the most efficient way of doing this
-			question_add = quiz.questions.get(questionNumber=questionNumber)
-			answer.save()
-			question_add.answers.add(answer)
-			question_add.save()
+	#		answerNumber = key[6:string.find(key,'_')]
+	#		questionNumber = key[string.find(key,'_') + 2:]
+	#		answer.answerNumber = answerNumber
+	#		#maybe not the most efficient way of doing this
+	#		question_add = quiz.questions.get(questionNumber=questionNumber)
+	#		answer.save()
+	#		question_add.answers.add(answer)
+	#		question_add.save()
 			#question_add.answers.order_by(answerNumber)
 	#we need to order the answers
-	result_number = 0
-	for x in range(1,total_results+1):
-		quiz_scoring = []
-		result = Result()
-		result.Quiz_Result = r_list[x-1]
-		print r_list[x-1]
-		result.Quiz_Result_Explanation = r_e_list[x-1]
-		for y in range(1,total_questions+1):
-			score_list = []
-			for z in range(0,(int(q_a_a_list[y]) )):
-				score_list.append(data['r'+str(y)+'_'+str(x)+'_'+str(z+1)])
-			quiz_scoring.append(score_list)
-		result.Quiz_Scoring = quiz_scoring
-		result.resultNumber = x
+	#result_number = 0
+	#for x in range(1,total_results+1):
+	#	quiz_scoring = []
+	#	result = Result()
+	#	result.Quiz_Result = r_list[x-1]
+	#	print r_list[x-1]
+	#	result.Quiz_Result_Explanation = r_e_list[x-1]
+	#	for y in range(1,total_questions+1):
+	#		score_list = []
+	#		for z in range(0,(int(q_a_a_list[y]) )):
+	#			score_list.append(data['r'+str(y)+'_'+str(x)+'_'+str(z+1)])
+	#		quiz_scoring.append(score_list)
+	#	result.Quiz_Scoring = quiz_scoring
+	#	result.resultNumber = x
 		#result.Quiz_Result = 
-		result.save()
-		print result.Quiz_Result
-		quiz.results.add(result)
-		quiz.save()
+	#	result.save()
+	#	print result.Quiz_Result
+	#	quiz.results.add(result)
+	#	quiz.save()
 	#for key in data:
 	#	result_scoring_list=[]
 	#	total_scoring_list=[]

@@ -8,39 +8,52 @@ var question_no = 0
 var questionArray = []
 function add_question(){
 	question_no++
-	var div = "<div id='q" + question_no
-	var table = "'><table border=2 id='tq" + question_no + "'>"
-	
-	for (var i = 1; i < questionArray[question_no]+1;i++)
-	{	
-		add_answer(question_no,i)
-		questionArray[question_no]--
-	}	
-	//$("#questionArray").val(questionAnswersArray)
-	$("#numQuestions").val(question_no)	
+	var qNum = "<div class='questionNumbering' id='questionNumber" + question_no +"'> " + question_no + ")</div>"
+	var question = "<input type='text' class='question' id='q" + question_no + "' name='q" + question_no +"' ><br/><br/>"
+	$("#numQuestions").val(question_no)
+	$("#questions").append(qNum+question)	
 }
 function remove_question(){
+	$("#q" + question_no).next('br').remove()
+	$("#q" + question_no).next('br').remove()
+	//$("#q" + question_no + ").next('br'.remove()")
 	$("#q" + question_no).remove()
+	$("#questionNumber" + question_no).remove()
+
 	question_no--
+}
+function addQuestions(){
+	for (var i = 0; i  < parseInt($("#numberOfQuestions").val()); i++) {
+		add_question();
+	}
+	$("#add_questions").prop('disabled',true);
 }
 
 </script>
-<body>
 	<h2>Welcome to Quiz Creator!</h2>
-	<h3>First let's add give your quiz and title and add questions we'll deal add answers and deal with the scoring next</h3>
+	<h3>First let's add give your quiz a title and add questions we'll deal add answers and deal with the scoring next</h3>
 	<br/><br/>
 
-Quiz name:<input type="text" name="Quiz_Name" required> 
-Quiz description: <input type="text" name="Quiz_Description">
-	<br/>
-	How many questions do you want your quiz to have? (You can add or remove questions after you set this)
-	<input type='number' name='numberOfQuestions' id='numberOfQuestions' value = 10 ></input>
-	<button id='add_questions' onclick="addQuestions()">Add Questions!</button>
-	<h3>Begin by naming and describing your questions in the fields next to Quiz name and Quiz description</h3><br/>
-	<h3>Then start adding questions</h3><br/>
-	<h3>To add a question, first type in the question then each of the potential answers, click the add question button to add another question</h3><br/>
-<form action="created/" method="post"> 
+
+<form action="create/AddAnswers" method="post"> 
 {% csrf_token %}
+<div id="user_input">
+
+Quiz name:
+<br/>
+<input type="text" name="Quiz_Name" id = "Quiz_Name" required>
+<br/> 
+<br/>
+<br/>
+Quiz description: 
+<br/>
+<input type="text" id = "Quiz_Description" name="Quiz_Description">
+	<br/>
+	<br/>
+	<br/>
+	How many questions do you want your quiz to have? (You can add or remove questions later)
+	<input type='number' name='numberOfQuestions' id='numberOfQuestions' value = 10></input>
+	<button id='add_questions' onclick="addQuestions()" >Add Questions!</button>
 <input type="hidden" type = "text" id="questionArray" name="questionArray">
 <input type="hidden" type = "text" id="numQuestions" name="numQuestions">
 <div id="errorMessages"></div>
@@ -49,6 +62,7 @@ Quiz description: <input type="text" name="Quiz_Description">
 
 <button type="button" onclick="add_question();">Add another question</button>
 <button type="button" onclick="remove_question()">Remove last question</button>
-<input type="submit" value="Submit Quiz" /></form>
-</body>
+<input type="submit" value="Submit Quiz" />
+</form>
+</div>
 {% endblock %}

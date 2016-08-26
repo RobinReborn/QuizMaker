@@ -2,8 +2,12 @@ body {
 	
 	background-color: blue;
 }
-.question 
+.question
 {
-	width:  100em;
+	width: 100em;
 	height: 4em;
+}
+#user_input
+{
+	text-align: center;
 }
