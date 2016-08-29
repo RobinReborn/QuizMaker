@@ -1,4 +1,5 @@
-{% extends'quzzies/base.html' %}
+{% extends 'quizzes/base.html' %}
+
 
 {% block content %}
 <script>
@@ -6,9 +7,17 @@
 </script>
 
 Congratulations on adding your questions, now you need to specify how users will enter their answers
-
+<br/><br/>
 Multiple Choice
 Input from Keyboard
+<br/>
+<h2>{{Quiz_Name}}</h2>
+<br/>
+<br/>
+<h3>{{Quiz_Description}}</h3>
 
-
+{% for q in questions %}
+<h3>{{q}}</h3>
+<br/><br/>
+{% endfor %}
 {% endblock %}

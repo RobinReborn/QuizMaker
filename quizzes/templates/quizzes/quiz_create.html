@@ -28,14 +28,21 @@ function addQuestions(){
 	}
 	$("#add_questions").prop('disabled',true);
 }
+function prepareQuestions() {
+	for (var i=0; i <= question_no; i++)
+	{
+		questionArray[i] = $("#q" + i).val()
+	}
+	$("#questionArray").val(questionArray)
 
+}
 </script>
 	<h2>Welcome to Quiz Creator!</h2>
 	<h3>First let's add give your quiz a title and add questions we'll deal add answers and deal with the scoring next</h3>
 	<br/><br/>
 
 
-<form action="create/AddAnswers" method="post"> 
+<form action="/quizzes/create/add_answers" method="post"> 
 {% csrf_token %}
 <div id="user_input">
 
@@ -60,9 +67,9 @@ Quiz description:
 <div id="questions"></div>
 </input>
 
-<button type="button" onclick="add_question();">Add another question</button>
+<button type="button" onclick="add_question();">Add new question</button>
 <button type="button" onclick="remove_question()">Remove last question</button>
-<input type="submit" value="Submit Quiz" />
+<input type="submit" value="Submit Quiz" onclick="prepareQuestions()" />
 </form>
 </div>
 {% endblock %}

@@ -56,10 +56,16 @@ def quiz_create(request):
 	template = loader.get_template('quizzes/quiz_create.html')
     #return render(request,'quizzes/quiz_create.html')print c
 	return render(request,"quizzes/quiz_create.html", c)
-def add_answers(request):
-	c = {'request' : request}
+def add_answers(request):	
 	template = loader.get_template('quizzes/quiz_create.html')
-	return render(request,"quizzes/add_answers.html", c)
+	data = request.POST.dict()
+	questions = []
+	QuestionArray = data["questionArray"].split(",")
+	for key in data:
+		if (re.match(r'q\d',key)):
+			questions.append(data[key])
+	context = {'Quiz_Name': data['Quiz_Name'], 'Quiz_Description': data['Quiz_Description'], 'questions' : QuestionArray}
+	return render(request,"quizzes/add_answers.html", context)
 #@csrf_protect
 def result(request,Quiz_Name):
 	quiz = Quiz.objects.get(Quiz_Title=Quiz_Name)
