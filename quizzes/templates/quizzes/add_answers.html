@@ -46,7 +46,7 @@ Is there one correct answer for each question?
 
 
 <br/>
-<div class = "userTyped"
+<div class = "userTyped">
 Will the user type an answer in each question or in an answer box for all questions?
 <br/>
 <br/>
@@ -61,10 +61,11 @@ Will the user type an answer in each question or in an answer box for all questi
 {% for q in questions %}
 <h3>{{q}}</h3>
 <input type="text" id="q{{ forlooop.counter }}a" name="q{{ forloop.counter }}a1"</input><br/><br/>
+<div class="MultipleChoice">
 <input type="text" id="q{{ forlooop.counter }}a" class= "Multiple Choice" name="q{{ forloop.counter }}a2"</input><br/><br/>
 <input type="text" id="q{{ forlooop.counter }}a" class= "Multiple Choice"name="q{{ forloop.counter }}a3"</input><br/><br/>
 <input type="text" id="q{{ forlooop.counter }}a" class= "Multiple Choice" name="q{{ forloop.counter }}a4"</input><br/><br/>
-
+</div>
 <br/><br/>
 {% endfor %}
 {% endblock %}
