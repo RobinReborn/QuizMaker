@@ -3,14 +3,56 @@
 
 {% block content %}
 <script>
+function changeToMultipleChoice(){
+	$(".MultipleChoice").show()
+	$(".userTyped").hide()
+}
+function changeToUserTyped(){
+	$(".MultipleChoice").hide()
+	$(".userTyped").show()
+}
+function changeToUniDimensional(){
 
+}
+function changeToMultiDimensional(){
+
+}
+function changeToUserInputForEachQuestion(){
+
+}
+function changeToSingleAnswerBox(){
+
+}
 </script>
 
 Congratulations on adding your questions, now you need to specify how users will enter their answers
 <br/><br/>
-Multiple Choice
-Input from Keyboard
+<input type="radio"  name="quizType" value="Multiple Choice" onclick="changeToMultipleChoice()" checked>Multiple Choice</input>
+<input type="radio" name="quizType" value="User Types in Answer" onclick="changeToUserTyped()">User Types in Answer</input>
+
 <br/>
+<div class="MultipleChoice">
+How many answers do you want for each question (this can be changed later)
+<br/>
+<input type="number" id="numAnswers" value="4"></input>
+
+
+<br/>
+Is there one correct answer for each question?
+
+<input type="radio" name="scoringType" value="One correct Answer" onclick="changeToUniDimensional()" checked>One correct Answer</input>
+<input type="radio" name="scoringType" value="Multidimensional scoring" onclick="changeToMultiDimensional()">Multidimensional scoring</input>
+</div>
+
+
+<br/>
+<div class = "userTyped"
+Will the user type an answer in each question or in an answer box for all questions?
+<br/>
+<br/>
+<input type="radio" name="answeringType"  value="One Answer Per Question" visibility = "false" onclick="changeToUserInputForEachQuestion()" checked>One Answer Per Question</input>
+<input type="radio" name="answeringType"  value="A Box Where Any Correct Answer is Accepted for the Appropriate Question" visibility = "false" onclick="changeToSingleAnswerBox()">A Box Where Any Correct Answer is Accepted for the Appropriate Question</input>
+</div>
 <h2>{{Quiz_Name}}</h2>
 <br/>
 <br/>
@@ -18,6 +60,11 @@ Input from Keyboard
 
 {% for q in questions %}
 <h3>{{q}}</h3>
+<input type="text" id="q{{ forlooop.counter }}a" name="q{{ forloop.counter }}a1"</input><br/><br/>
+<input type="text" id="q{{ forlooop.counter }}a" class= "Multiple Choice" name="q{{ forloop.counter }}a2"</input><br/><br/>
+<input type="text" id="q{{ forlooop.counter }}a" class= "Multiple Choice"name="q{{ forloop.counter }}a3"</input><br/><br/>
+<input type="text" id="q{{ forlooop.counter }}a" class= "Multiple Choice" name="q{{ forloop.counter }}a4"</input><br/><br/>
+
 <br/><br/>
 {% endfor %}
 {% endblock %}
