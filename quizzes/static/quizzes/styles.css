@@ -23,5 +23,22 @@ body {
 }
 .questionNumbering
 {
-	text-align: left;
+	float: left;
+	display:inline;
+}
+.answerNumbering
+{
+	float:left;
+	display:inline;
+
+}
+.AnswerField
+{
+	width: 50em;
+	padding: 4px ;
+}
+#UserInputAnswer
+{
+	width: 20em;
+	padding: 4px;
 }

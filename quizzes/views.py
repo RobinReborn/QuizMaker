@@ -59,13 +59,47 @@ def quiz_create(request):
 def add_answers(request):	
 	template = loader.get_template('quizzes/quiz_create.html')
 	data = request.POST.dict()
-	questions = []
+	#questions = []
 	QuestionArray = data["questionArray"].split(",")
-	for key in data:
-		if (re.match(r'q\d',key)):
-			questions.append(data[key])
+	quiz = Quiz()
+	quiz.Quiz_Title = request.POST['Quiz_Name']
+	quiz.Quiz_Description = request.POST['Quiz_Description']
+	quiz.save()
+	for x in range(0, len(QuestionArray)):
+		print str(x+1)+ QuestionArray[x] + "\n"
+		#questions.append(data[key])
+		question = Question()
+		question.question_text = QuestionArray[x]
+		question.questionNumber = x+1
+		question.save()
+		quiz.questions.add(question)
+		quiz.save()
+		#print "\n added q" + question.questionNumber
+	quiz.save()
 	context = {'Quiz_Name': data['Quiz_Name'], 'Quiz_Description': data['Quiz_Description'], 'questions' : QuestionArray}
 	return render(request,"quizzes/add_answers.html", context)
+def add_results(request):
+	data= request.POST.dict()
+	dataList = []
+	questionArray = data['Questions']
+	questionsArray = data['Questions']
+	quiz = Quiz.objects.get(Quiz_Title=data['Quiz_Name'])
+	for key in data:
+		if (re.match(r'q\d+a\d+',key)):
+			answerIndex = re.findall(r'\d+',key)
+			answer = Answer()
+			question_number = int(answerIndex[0])
+			answer.answerNumber = answerIndex[1]
+			print "question" + str(question_number) + "\n" + data['Quiz_Name']
+			answer.answertext = data[key]
+			answer.save()
+			question_add = quiz.questions.get(questionNumber=question_number)
+			question_add.answers.add(answer)
+			question_add.save()
+			#question_add.answers.order_by(answerNumber)
+	dataList.append({key,data[key]})
+	context = {'data': dataList}
+	return render(request,'quizzes/add_results.html',context)
 #@csrf_protect
 def result(request,Quiz_Name):
 	quiz = Quiz.objects.get(Quiz_Title=Quiz_Name)

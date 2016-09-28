@@ -11,7 +11,6 @@ class Quiz(models.Model):
 	Quiz_Type = models.CharField(max_length=1000)
 	def __unicode__(self):
 		return unicode(self.questions)
-	
 class Question(models.Model):
 	question_text = models.CharField(max_length=500)
 	num_answers = models.IntegerField(default=0)
@@ -29,7 +28,7 @@ class Answer(models.Model):
 	#this should place the image in quiz/question_pk/answer_pk
 	image = models.ImageField(upload_to='/images/',default=None,blank=True)
 	def __unicode__(self):
-		        return unicode(self.answertext)
+		return unicode(self.answertext)
 	#Quiz_Part = models.ForeignKey(Quiz,default=1)
 class Result(models.Model):
 	#Quiz_Results = models.ForeignKey(Quiz,default=1)

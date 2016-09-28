@@ -5,40 +5,47 @@
 <script>
 function changeToMultipleChoice(){
 	$(".MultipleChoice").show()
-	$(".userTyped").hide()
+	$(".UserInputAnswer").hide()
 }
 function changeToUserTyped(){
 	$(".MultipleChoice").hide()
-	$(".userTyped").show()
+	$(".UserInputAnswer").show()
 }
 function changeToUniDimensional(){
+	$(".uniDimensional").show()
 
 }
 function changeToMultiDimensional(){
+	$(".uniDimensional").hide()
+}
+function addAnswer(answerQuestion){
+	var qa = answerQuestion.match(/\d+/g)
+	var question = qa[0]
+	var answer = parseInt(qa[1]) + 1
+	var htmlAnswer = "<div id='q" +question + "a" + answer + "wrapper'> <span class='uniDimensional'> <input type='radio' name='q" + question + "a' value='" + answer + "'></input></span>  <div class='answerNumbering' id='answerNumber" + answer + "_question_no" + question + "'>" + answer + " </div><input type='text' id='q" + question + "a" + answer + "' name='q" + question + "a" + answer + "' class='AnswerField' ></input><br/>"
+	$("#" + answerQuestion).after(htmlAnswer)
 
 }
-function changeToUserInputForEachQuestion(){
-
-}
-function changeToSingleAnswerBox(){
-
+function removeAnswer(answerQuestion){
+	$("#" + answerQuestion).empty()
+	$("#" + answerQuestion).remove()
 }
 </script>
 
 Congratulations on adding your questions, now you need to specify how users will enter their answers
 <br/><br/>
+<form action="/quizzes/create/add_results" method="POST">
+{% csrf_token %}
 <input type="radio"  name="quizType" value="Multiple Choice" onclick="changeToMultipleChoice()" checked>Multiple Choice</input>
 <input type="radio" name="quizType" value="User Types in Answer" onclick="changeToUserTyped()">User Types in Answer</input>
 
 <br/>
 <div class="MultipleChoice">
-How many answers do you want for each question (this can be changed later)
-<br/>
-<input type="number" id="numAnswers" value="4"></input>
-
 
 <br/>
+
 Is there one correct answer for each question?
+
 
 <input type="radio" name="scoringType" value="One correct Answer" onclick="changeToUniDimensional()" checked>One correct Answer</input>
 <input type="radio" name="scoringType" value="Multidimensional scoring" onclick="changeToMultiDimensional()">Multidimensional scoring</input>
@@ -46,26 +53,53 @@ Is there one correct answer for each question?
 
 
 <br/>
-<div class = "userTyped">
-Will the user type an answer in each question or in an answer box for all questions?
-<br/>
-<br/>
-<input type="radio" name="answeringType"  value="One Answer Per Question" visibility = "false" onclick="changeToUserInputForEachQuestion()" checked>One Answer Per Question</input>
-<input type="radio" name="answeringType"  value="A Box Where Any Correct Answer is Accepted for the Appropriate Question" visibility = "false" onclick="changeToSingleAnswerBox()">A Box Where Any Correct Answer is Accepted for the Appropriate Question</input>
-</div>
+
 <h2>{{Quiz_Name}}</h2>
 <br/>
 <br/>
 <h3>{{Quiz_Description}}</h3>
 
 {% for q in questions %}
-<h3>{{q}}</h3>
-<input type="text" id="q{{ forlooop.counter }}a" name="q{{ forloop.counter }}a1"</input><br/><br/>
-<div class="MultipleChoice">
-<input type="text" id="q{{ forlooop.counter }}a" class= "Multiple Choice" name="q{{ forloop.counter }}a2"</input><br/><br/>
-<input type="text" id="q{{ forlooop.counter }}a" class= "Multiple Choice"name="q{{ forloop.counter }}a3"</input><br/><br/>
-<input type="text" id="q{{ forlooop.counter }}a" class= "Multiple Choice" name="q{{ forloop.counter }}a4"</input><br/><br/>
+<h3>{{forloop.counter}})   {{q}}</h3>
+
+
+<div class="UserInputAnswer" hidden>
+<input type="text" id = "UserInputAnswer" name="a{{forloop.counter}}"></input>
 </div>
-<br/><br/>
+<div class="MultipleChoice">
+
+<div id='q{{forloop.counter}}a1wrapper'>
+<span class="uniDimensional"><input type="radio" name="q{{forloop.counter}}a" value="1"></input></span> 
+<div class='answerNumbering' id='answerNumber1_question_no{{forloop.counter}}'>1 </div>
+<input type="text" id="q{{forloop.counter}}a1" name="q{{forloop.counter}}a1" class="AnswerField"></input><br/>
+</div>
+
+<div id='q{{forloop.counter}}a2wrapper'>
+<span class="uniDimensional"><input type="radio" name="q{{forloop.counter}}a" value="2"></input></span> 
+<div class='answerNumbering' id='answerNumber2_question_no{{ forloop.counter}}'>2 </div>
+<input type="text" id="q{{forloop.counter}}a2" name="q{{ forloop.counter }}a2" class="AnswerField"></input><br/>
+</div>
+
+<div id='q{{forloop.counter}}a3wrapper'>
+<span class="uniDimensional"><input type="radio" name="q{{forloop.counter}}a" value="3"></input></span> 
+<div class='answerNumbering' id='answerNumber3_question_no{{forloop.counter}}'>3 </div>
+<input type="text" id="q{{forloop.counter}}a3" name="q{{ forloop.counter }}a3" class="AnswerField"></input><br/>
+</div>
+
+<div id='q{{forloop.counter}}a4wrapper'>
+<span class="uniDimensional"><input type="radio" name="q{{forloop.counter}}a" value="4"></input></span> 
+<div class='answerNumbering' id='answerNumber4_question_no{{forloop.counter}}'>4 </div>
+<input type="text" id="q{{forloop.counter}}a4" name="q{{forloop.counter}}a4" class="AnswerField"></input><br/>
+</div>
+
+<button id="addAnswerq{{forloop.counter}}" onclick="addAnswer($(this).prev().attr('id'))">Add Answer</button>
+<button id="removeAnswerq{{forloop.counter}}" onclick="removeAnswer($(this).prev().prev().attr('id'))">Remove Answer </button>
+</div>
+<br/>
 {% endfor %}
+
+<input type="submit" value="Submit Answers" onclick="prepareQuestions()" />
+<input type="hidden" name="Questions" value="{{questions}}"></input>
+<input type="hidden" name="Quiz_Name" value="{{Quiz_Name}}"></input>
+</form>
 {% endblock %}
