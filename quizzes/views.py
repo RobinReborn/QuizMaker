@@ -97,7 +97,7 @@ def add_results(request):
 			question_add.answers.add(answer)
 			question_add.save()
 			#question_add.answers.order_by(answerNumber)
-	dataList.append({key,data[key]})
+		dataList.append({key,data[key]})
 	context = {'data': dataList}
 	return render(request,'quizzes/add_results.html',context)
 #@csrf_protect

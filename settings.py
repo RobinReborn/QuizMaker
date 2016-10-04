@@ -127,5 +127,5 @@ USE_TZ = True
 #)
 
 STATIC_URL = '/static/'
-STATIC_ROOT= '/home/robin/workspace/quizmaker/static/'
+STATIC_ROOT= '/home/robin/workspace/quizmaker/quizzes/static/quizzes'
 
