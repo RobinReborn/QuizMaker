@@ -38,7 +38,6 @@ def quiz(request,Quiz_Name):
 			#rather than the other way around
 			for a in Answer.objects.filter(question=q).order_by('answerNumber'):
 				quiz_answers.append(a)
-				#print a.answerNumber
 	for r in quiz_request.results.all().order_by('resultNumber'):
 		if (r != ','):
 			quiz_results.append(r)
