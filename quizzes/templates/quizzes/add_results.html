@@ -6,11 +6,19 @@
 {% if quizType == 'Multiple Choice/One correct Answer' or 'User Types in Answer'%}
 The user will see the percentage of questions they got correct, if you'd like you can add additional information based on the percentage range the user scored.
 <br/>
+<form action="/quizzes/create/created" method="POST">
 <input type="number" id = "lowerRange1" name="lowerRange1" value="0" readonly />
-<input type="number" id= "upperRange1" name="upperRange1" value="100" />
-<input type="text" name="range1Description" placeholder="enter result here" />
+<input type="number" id= "upperRange1" name="upperRange1" value="100" max="100" min="1" />
+<input class="rangeDescription" type="text" name="range1Description" placeholder="enter result here" />
 <button name="rangeAdder" id="range1" onClick="addRange($(this).attr('id'))" >Add another result </button>
 <br/>
+<input type="submit" value="Submit Results" />
+</form>
+{% else %}
+
+For Multi-dimensional scoring you need to specify the possible results, then specify how each answer effects each result
+
+
 {% endif %}
 {% for d in data %}
 
@@ -21,7 +29,7 @@ The user will see the percentage of questions they got correct, if you'd like yo
 <script>
 function addRange(range) {
 	newRange = parseInt(range.substring(5)) + 1
-	newRangeHtml = "<br/><input type='number' id = 'lowerRange" + newRange.toString() + "' name='lowerRange" + newRange.toString() + "' value='" + $("#upperRange" + (newRange - 1).toString()).val()  + "' readonly/> <input type='number' id= 'upperRange" + newRange + "' name='upperRange" + newRange + "' value='100'/> <input type='text' name='range" + newRange + "Description' placeholder='enter result here' /> <button name='rangeAdder' id='range" + newRange + "' onClick=\"addRange($(this).attr(\'id\'))\" >Add another result </button><br/>"
+	newRangeHtml = "<br/><input type='number' id = 'lowerRange" + newRange.toString() + "' name='lowerRange" + newRange.toString() + "' value='" + (parseInt($("#upperRange" + (newRange - 1).toString()).val()) +1)  + "' readonly/> <input type='number' id= 'upperRange" + newRange + "' name='upperRange" + newRange + "' value='100' max='100' min='" + (parseInt($("#upperRange" + (newRange - 1).toString()).val()) +1) + "' /> <input type='text' class='rangeDescription' name='range" + newRange + "Description' placeholder='enter result here' /> <button name='rangeAdder' id='range" + newRange + "' onClick=\"addRange($(this).attr(\'id\'))\" >Add another result </button><br/>"
 	$("#"+ range).after(newRangeHtml)
 	$("#" + range).remove()
 }

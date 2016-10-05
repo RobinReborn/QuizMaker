@@ -65,13 +65,14 @@ def add_answers(request):
 	quiz.Quiz_Description = request.POST['Quiz_Description']
 	quiz.save()
 	for x in range(0, len(QuestionArray)):
-		print str(x+1)+ QuestionArray[x] + "\n"
+		#print str(x+1)+ QuestionArray[x] + "\n"
 		#questions.append(data[key])
 		question = Question()
 		question.question_text = QuestionArray[x]
 		question.questionNumber = x+1
 		question.save()
-		quiz.questions.add(question)
+		quiz.question_set.add(question)
+		#quiz.questions.add(question)
 		quiz.save()
 		#print "\n added q" + question.questionNumber
 	quiz.save()
@@ -94,12 +95,12 @@ def add_results(request):
 			answer.answerNumber = answerIndex[1]
 			answer.answertext = data[key]
 			answer.save()
-			question_add = quiz.questions.get(questionNumber=question_number)
-			question_add.answers.add(answer)
+			question_add = quiz.question_set.get(questionNumber=question_number)
+			question_add.answer_set.add(answer)
 			question_add.save()
 			#question_add.answers.order_by(answerNumber)
 		dataList.append({data[key],key})
-	context = {'data': dataList, 'quizType': quizType}
+	context = {'data': dataList, 'quizType': quizType, 'quiz': quiz}
 	return render(request,'quizzes/add_results.html',context)
 #@csrf_protect
 def result(request,Quiz_Name):
