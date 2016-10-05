@@ -2,10 +2,28 @@
 
 
 {% block content %}
-
+<script>
+function addRange(range) {
+	newRange = parseInt(range.substring(5)) + 1
+	newRangeHtml = "<input type='number' name='lowerRange" + newRange + "' value='" + $("#upperRange" + (newRange - 1).toString()).val()  +"'/> <input type='number' name='upperRange" + newRange + "' value='100' /> <input type='text' name='range" + newRange + "Description' placeholder='enter result here' /> <button name='rangeAdder' id='range" + newRange + "'' onClick='addRange($(this).attr('id'))' >Add another result </button>"
+	$("#"+ range).after(newRangeHtml)
+}
+</script>
+{% if quizType == 'Multiple Choice/One correct Answer' or 'User Types in Answer'%}
+The user will see the percentage of questions they got correct, if you'd like you can add additional information based on the percentage range the user scored.
+<div id="percentageRanges">
+<div id="range1">
+<input type="number" id = "lowerRange1" name="lowerRange1" value="0" readonly />
+<input type="number" id= "upperRange1" name="upperRange1" value="100" />
+<input type="text" name="range1Description" placeholder="enter result here" />
+<button name="rangeAdder" id="range1" onClick="addRange($(this).attr('id'))" >Add another result </button>
+</div>
+</div>
+{% endif %}
 {% for d in data %}
 
 {{d}}
 <br>/
+{{data.quizType}}
 {% endfor %}
 {% endblock %}

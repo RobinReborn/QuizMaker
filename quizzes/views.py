@@ -84,21 +84,23 @@ def add_results(request):
 	questionArray = data['Questions']
 	questionsArray = data['Questions']
 	quiz = Quiz.objects.get(Quiz_Title=data['Quiz_Name'])
+	quizType = data['quizType']
+	if ('scoringType' in data):
+		quizType += '/' + data['scoringType']
 	for key in data:
 		if (re.match(r'q\d+a\d+',key)):
 			answerIndex = re.findall(r'\d+',key)
 			answer = Answer()
 			question_number = int(answerIndex[0])
 			answer.answerNumber = answerIndex[1]
-			print "question" + str(question_number) + "\n" + data['Quiz_Name']
 			answer.answertext = data[key]
 			answer.save()
 			question_add = quiz.questions.get(questionNumber=question_number)
 			question_add.answers.add(answer)
 			question_add.save()
 			#question_add.answers.order_by(answerNumber)
-		dataList.append({key,data[key]})
-	context = {'data': dataList}
+		dataList.append({data[key],key})
+	context = {'data': dataList, 'quizType': quizType}
 	return render(request,'quizzes/add_results.html',context)
 #@csrf_protect
 def result(request,Quiz_Name):
