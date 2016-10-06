@@ -94,6 +94,11 @@ def add_results(request):
 			question_number = int(answerIndex[0])
 			answer.answerNumber = answerIndex[1]
 			answer.answertext = data[key]
+			correctAnswer = data["q" + answerIndex[0] + "a"]
+			if (answerIndex[1]== correctAnswer):
+				answer.correctAnswer = "True"
+			else:
+				answer.correctAnswer = "False"
 			answer.save()
 			question_add = quiz.question_set.get(questionNumber=question_number)
 			question_add.answer_set.add(answer)

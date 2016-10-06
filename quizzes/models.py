@@ -18,7 +18,7 @@ class Question(models.Model):
 	question_text = models.CharField(max_length=500)
 	num_answers = models.IntegerField(default=0)
 	questionNumber = models.IntegerField(default=0)
-	image = models.ImageField(upload_to='/images/',default=None)
+	#image = models.ImageField(upload_to='/images/',default=None)
 	#answers = models.ManyToManyField('Answer',blank=True)
 	def __unicode__(self):
 		return unicode(self.question_text)
@@ -29,8 +29,7 @@ class Answer(models.Model):
 	question = models.ForeignKey(Question,on_delete=models.CASCADE,default=Question.DEFAULT_PK)
 	answertext = models.CharField(max_length=100)
 	answerNumber = models.IntegerField(default=0)
-	#this should place the image in quiz/question_pk/answer_pk
-	image = models.ImageField(upload_to='/images/',default=None,blank=True)
+	correctAnswer = models.CharField(max_length=20,default=None)
 	def __unicode__(self):
 		return unicode(self.answertext)
 	#Quiz_Part = models.ForeignKey(Quiz,default=1)

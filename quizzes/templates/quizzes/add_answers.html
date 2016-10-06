@@ -11,24 +11,39 @@ function changeToUserTyped(){
 	$(".MultipleChoice").hide()
 	$(".UserInputAnswer").show()
 }
-function changeToUniDimensional(){
-	$(".uniDimensional").show()
 
-}
-function changeToMultiDimensional(){
-	$(".uniDimensional").hide()
-}
 function addAnswer(answerQuestion){
 	var qa = answerQuestion.match(/\d+/g)
 	var question = qa[0]
 	var answer = parseInt(qa[1]) + 1
-	var htmlAnswer = "<div id='q" +question + "a" + answer + "wrapper'> <span class='uniDimensional'> <input type='radio' name='q" + question + "a' value='" + answer + "'></input></span>  <div class='answerNumbering' id='answerNumber" + answer + "_question_no" + question + "'>" + answer + " </div><input type='text' id='q" + question + "a" + answer + "' name='q" + question + "a" + answer + "' class='AnswerField' ></input><br/>"
+	var htmlAnswer = "<div id='q" +question + "a" + answer + "wrapper'>  <input type='radio' name='q" + question + "a' value='" + answer + "'></input></span>  <div class='answerNumbering' id='answerNumber" + answer + "_question_no" + question + "'>" + answer + " </div><input type='text' id='q" + question + "a" + answer + "' name='q" + question + "a" + answer + "' class='AnswerField' ></input><br/>"
 	$("#" + answerQuestion).after(htmlAnswer)
 
 }
 function removeAnswer(answerQuestion){
-	$("#" + answerQuestion).empty()
-	$("#" + answerQuestion).remove()
+	var qa = answerQuestion.match(/\d+/g)
+	if ( parseInt(qa[1]) > 2){
+		$("#" + answerQuestion).empty()
+		$("#" + answerQuestion).remove()
+}
+}
+function prepareAnswers(){
+	//right now this deals with multiple choice
+	//it will give an array of arrays, with each subarray containing the correct answer number followed by the possible answers
+	answersArray = []
+	for (var i =0 ; i < ($("#Questions").val().split(",").length) ; i++)
+	{
+		numAnswers = parseInt($("#addAnswerq" + String(i+1)).prev().attr("id").match(/\d+/g)[1])
+		answers = []
+		answers.push($("input[name=q" + String(i+1) + "a]:checked").val())
+		for (var j=0; j < numAnswers ; j++)
+		{
+			answers.push($("#q" + String(i+1) + "a" + String(j+1)).val())
+		}
+		answersArray.push(answers)
+	}
+	$("#AnswersArray").val(answersArray)
+
 }
 </script>
 
@@ -40,20 +55,11 @@ Congratulations on adding your questions, now you need to specify how users will
 <input type="radio" name="quizType" value="User Types in Answer" onclick="changeToUserTyped()">User Types in Answer</input>
 
 <br/>
+
+
+<br/>
 <div class="MultipleChoice">
-
-<br/>
-
-Is there one correct answer for each question?
-
-
-<input type="radio" name="scoringType" value="One correct Answer" onclick="changeToUniDimensional()" checked>One correct Answer</input>
-<input type="radio" name="scoringType" value="Multidimensional scoring" onclick="changeToMultiDimensional()">Multidimensional scoring</input>
-</div>
-
-
-<br/>
-
+Use the radio button to select the right answer for each question
 <h2>{{Quiz_Name}}</h2>
 <br/>
 <br/>
@@ -69,37 +75,38 @@ Is there one correct answer for each question?
 <div class="MultipleChoice">
 
 <div id='q{{forloop.counter}}a1wrapper'>
-<span class="uniDimensional"><input type="radio" name="q{{forloop.counter}}a" value="1"></input></span> 
+<input type="radio" name="q{{forloop.counter}}a" value="1" checked="checked"></input></span> 
 <div class='answerNumbering' id='answerNumber1_question_no{{forloop.counter}}'>1 </div>
 <input type="text" id="q{{forloop.counter}}a1" name="q{{forloop.counter}}a1" class="AnswerField"></input><br/>
 </div>
 
 <div id='q{{forloop.counter}}a2wrapper'>
-<span class="uniDimensional"><input type="radio" name="q{{forloop.counter}}a" value="2"></input></span> 
+<input type="radio" name="q{{forloop.counter}}a" value="2"></input></span> 
 <div class='answerNumbering' id='answerNumber2_question_no{{ forloop.counter}}'>2 </div>
 <input type="text" id="q{{forloop.counter}}a2" name="q{{ forloop.counter }}a2" class="AnswerField"></input><br/>
 </div>
 
 <div id='q{{forloop.counter}}a3wrapper'>
-<span class="uniDimensional"><input type="radio" name="q{{forloop.counter}}a" value="3"></input></span> 
+<input type="radio" name="q{{forloop.counter}}a" value="3"></input></span> 
 <div class='answerNumbering' id='answerNumber3_question_no{{forloop.counter}}'>3 </div>
 <input type="text" id="q{{forloop.counter}}a3" name="q{{ forloop.counter }}a3" class="AnswerField"></input><br/>
 </div>
 
 <div id='q{{forloop.counter}}a4wrapper'>
-<span class="uniDimensional"><input type="radio" name="q{{forloop.counter}}a" value="4"></input></span> 
+<input type="radio" name="q{{forloop.counter}}a" value="4"></input></span> 
 <div class='answerNumbering' id='answerNumber4_question_no{{forloop.counter}}'>4 </div>
 <input type="text" id="q{{forloop.counter}}a4" name="q{{forloop.counter}}a4" class="AnswerField"></input><br/>
 </div>
 
-<button id="addAnswerq{{forloop.counter}}" onclick="addAnswer($(this).prev().attr('id'))">Add Answer</button>
-<button id="removeAnswerq{{forloop.counter}}" onclick="removeAnswer($(this).prev().prev().attr('id'))">Remove Answer </button>
+<button type="button" id="addAnswerq{{forloop.counter}}" onclick="addAnswer($(this).prev().attr('id'))">Add Answer</button>
+<button type="button" id="removeAnswerq{{forloop.counter}}" onclick="removeAnswer($(this).prev().prev().attr('id'))">Remove Answer </button>
 </div>
 <br/>
 {% endfor %}
 
-<input type="submit" value="Submit Answers" onclick="prepareQuestions()" />
-<input type="hidden" name="Questions" value="{{questions}}"></input>
+<input type="submit" value="Submit Answers" onclick="prepareAnswers()" />
+<input type="hidden" name="Questions" id="Questions" value="{{questions}}"></input>
 <input type="hidden" name="Quiz_Name" value="{{Quiz_Name}}"></input>
+<input type="hidden" name="AnswersArray" id="AnswersArray"></input>
 </form>
 {% endblock %}

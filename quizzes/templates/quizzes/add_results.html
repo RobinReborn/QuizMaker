@@ -3,7 +3,6 @@
 
 {% block content %}
 
-{% if quizType == 'Multiple Choice/One correct Answer' or 'User Types in Answer'%}
 The user will see the percentage of questions they got correct, if you'd like you can add additional information based on the percentage range the user scored.
 <br/>
 <form action="/quizzes/create/created" method="POST">
@@ -14,18 +13,7 @@ The user will see the percentage of questions they got correct, if you'd like yo
 <br/>
 <input type="submit" value="Submit Results" />
 </form>
-{% else %}
 
-For Multi-dimensional scoring you need to specify the possible results, then specify how each answer effects each result
-
-
-{% endif %}
-{% for d in data %}
-
-{{d}}
-<br>/
-{{data.quizType}}
-{% endfor %}
 <script>
 function addRange(range) {
 	newRange = parseInt(range.substring(5)) + 1
