@@ -35,12 +35,15 @@ function prepareAnswers(){
 	{
 		numAnswers = parseInt($("#addAnswerq" + String(i+1)).prev().attr("id").match(/\d+/g)[1])
 		answers = []
+
 		answers.push($("input[name=q" + String(i+1) + "a]:checked").val())
 		for (var j=0; j < numAnswers ; j++)
 		{
 			answers.push($("#q" + String(i+1) + "a" + String(j+1)).val())
 		}
+		answers.push("/")
 		answersArray.push(answers)
+		//answers.push("/")
 	}
 	$("#AnswersArray").val(answersArray)
 

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from quizzes.models import *
-from django.template import RequestContext, loader
+from django.template import RequestContext, loader, Template
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators import csrf
 
@@ -10,19 +10,13 @@ import re
 import string
 #from helper_functions import process_Quiz
 from django.http import QueryDict
-#from django.template.context_processors import csrf
-#from django.template import Context
 from django.template.loader import get_template
-from django.template import Template, RequestContext
 
 
 def index(request):
 	print "in index"
 	quiz_list = Quiz.objects.all()
-	#template = loader.get_template('quizzes/index.html')
 	context = {'quiz_list': quiz_list}
-	#return render(request, 'quizzes/index.html', context)
-	#template = get_template('quizzes/index.html')
 	return render(request, 'quizzes/index.html', context)
 #@csrf_protect
 def quiz(request,Quiz_Name):
@@ -44,37 +38,25 @@ def quiz(request,Quiz_Name):
 	template = loader.get_template('quizzes/quiz.html')
 	context = {'quiz_request': quiz_request, 'quiz_questions': quiz_questions, 'quiz_answers': quiz_answers, 'quiz_results': quiz_results}
 	return render(request, 'quizzes/quiz.html', context)  
-
 #@csrf_protect
 def quiz_create(request):
-	#print "in quiz create"
 	c = {'request' : request}
-	#print "in quiz create \n"
-	#c.update(csrf(request))
-	#print c
 	template = loader.get_template('quizzes/quiz_create.html')
-    #return render(request,'quizzes/quiz_create.html')print c
 	return render(request,"quizzes/quiz_create.html", c)
 def add_answers(request):	
 	template = loader.get_template('quizzes/quiz_create.html')
 	data = request.POST.dict()
-	#questions = []
 	QuestionArray = data["questionArray"].split(",")
 	quiz = Quiz()
 	quiz.Quiz_Title = request.POST['Quiz_Name']
 	quiz.Quiz_Description = request.POST['Quiz_Description']
 	quiz.save()
 	for x in range(0, len(QuestionArray)):
-		#print str(x+1)+ QuestionArray[x] + "\n"
-		#questions.append(data[key])
 		question = Question()
 		question.question_text = QuestionArray[x]
 		question.questionNumber = x+1
 		question.save()
 		quiz.question_set.add(question)
-		#quiz.questions.add(question)
-		quiz.save()
-		#print "\n added q" + question.questionNumber
 	quiz.save()
 	context = {'Quiz_Name': data['Quiz_Name'], 'Quiz_Description': data['Quiz_Description'], 'questions' : QuestionArray}
 	return render(request,"quizzes/add_answers.html", context)
@@ -82,29 +64,49 @@ def add_results(request):
 	data= request.POST.dict()
 	dataList = []
 	questionArray = data['Questions']
-	questionsArray = data['Questions']
+	answerArray = data['AnswersArray'].split(",/,")
+	del answerArray[-1]
+	for x in range(0,len(answerArray)):
+		answerArray[x] = answerArray[x].split(",")
 	quiz = Quiz.objects.get(Quiz_Title=data['Quiz_Name'])
 	quizType = data['quizType']
-	if ('scoringType' in data):
-		quizType += '/' + data['scoringType']
-	for key in data:
-		if (re.match(r'q\d+a\d+',key)):
-			answerIndex = re.findall(r'\d+',key)
+	correctAnswer = int(answerArray[x][0])
+	del answerArray[x][0]
+	for x in range(0,len(answerArray)):
+		#print answerArray[x] + '\n'
+		#print answerArray[x][0]
+		questionNumber = x+1
+		question_add = quiz.question_set.get(questionNumber=questionNumber)
+		for a in range(0,len(answerArray[x])):
 			answer = Answer()
-			question_number = int(answerIndex[0])
-			answer.answerNumber = answerIndex[1]
-			answer.answertext = data[key]
-			correctAnswer = data["q" + answerIndex[0] + "a"]
-			if (answerIndex[1]== correctAnswer):
+			if (a == correctAnswer):
 				answer.correctAnswer = "True"
 			else:
 				answer.correctAnswer = "False"
+			answer.answertext = answerArray[x][a]
+			answer.answerNumber = a+1
 			answer.save()
-			question_add = quiz.question_set.get(questionNumber=question_number)
 			question_add.answer_set.add(answer)
-			question_add.save()
+		question_add.save()
+	#for key in data:
+	#	if (re.match(r'q\d+a\d+',key)):
+	#		answerIndex = re.findall(r'\d+',key)
+	#		answer = Answer()
+	#		question_number = int(answerIndex[0])
+	#		answer.answerNumber = answerIndex[1]
+	#		answer.answertext = data[key]
+	#		correctAnswer = data["q" + answerIndex[0] + "a"]
+	#		if (answerIndex[1]== correctAnswer):
+	#			answer.correctAnswer = "True"
+	#		else:
+	#			answer.correctAnswer = "False"
+	#		answer.save()
+	#		question_add = quiz.question_set.get(questionNumber=question_number)
+	#		question_add.answer_set.add(answer)
+	#		question_add.save()
 			#question_add.answers.order_by(answerNumber)
-		dataList.append({data[key],key})
+	#	dataList.append({data[key],key})
+	quiz.save()
 	context = {'data': dataList, 'quizType': quizType, 'quiz': quiz}
 	return render(request,'quizzes/add_results.html',context)
 #@csrf_protect
