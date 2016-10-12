@@ -24,13 +24,14 @@ def quiz(request,Quiz_Name):
 	quiz_questions = []
 	quiz_answers = []
 	quiz_results = []
-	for q in quiz_request.questions.all().order_by('questionNumber'):
+	for q in Question.objects.filter(quiz=quiz_request).order_by('questionNumber'):
 		if (q != ','):
 			quiz_questions.append(q)
 			#right now we're going through all the answers
 			#we could change the model to have answers belong to questions
 			#rather than the other way around
 			for a in Answer.objects.filter(question=q).order_by('answerNumber'):
+				print str(a) + "\n"
 				quiz_answers.append(a)
 	for r in quiz_request.results.all().order_by('resultNumber'):
 		if (r != ','):
@@ -62,19 +63,19 @@ def add_answers(request):
 	return render(request,"quizzes/add_answers.html", context)
 def add_results(request):
 	data= request.POST.dict()
-	dataList = []
+	#dataList = []
 	questionArray = data['Questions']
 	answerArray = data['AnswersArray'].split(",/,")
-	del answerArray[-1]
 	for x in range(0,len(answerArray)):
 		answerArray[x] = answerArray[x].split(",")
+	del answerArray[-1][-1]
 	quiz = Quiz.objects.get(Quiz_Title=data['Quiz_Name'])
-	quizType = data['quizType']
-	correctAnswer = int(answerArray[x][0])
-	del answerArray[x][0]
+	quizType = data['quizType']	
 	for x in range(0,len(answerArray)):
 		#print answerArray[x] + '\n'
 		#print answerArray[x][0]
+		correctAnswer = int(answerArray[x][0])
+		del answerArray[x][0]
 		questionNumber = x+1
 		question_add = quiz.question_set.get(questionNumber=questionNumber)
 		for a in range(0,len(answerArray[x])):
@@ -107,7 +108,7 @@ def add_results(request):
 			#question_add.answers.order_by(answerNumber)
 	#	dataList.append({data[key],key})
 	quiz.save()
-	context = {'data': dataList, 'quizType': quizType, 'quiz': quiz}
+	context = {'quizType': quizType, 'quiz': quiz}
 	return render(request,'quizzes/add_results.html',context)
 #@csrf_protect
 def result(request,Quiz_Name):

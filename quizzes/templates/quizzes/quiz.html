@@ -1,3 +1,6 @@
+{% extends 'quizzes/base.html' %}
+{% block content %}
+
 {%if quiz_request %}
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script>
@@ -47,12 +50,9 @@
 <script type="text/javascript">
 answerArray.push(0)
 </script>
-{% for answer in question.sortAnswers %}
-<input type="radio" name= "question-{{question.questionNumber}}" class="question-{{question.questionNumber}}" value={{answer.answerNumber}}>{{answer.answertext}}<br>
+{% for a in question.answer_set.all %}
+<input type="radio" name= "question-{{question.questionNumber}}" class="question-{{question.questionNumber}}" value={{a.answerNumber}}>{{a.answertext}}<br>
 {% endfor %}
- <script type = "text/javascript">
-	 $("input[name='question-{{question.questionNumber}}']").click(function(){updateResults('question-{{question.questionNumber}}')} )
-</script>
 {% endfor %}
 {% for result in quiz_results %}
 <h4>{{result.Quiz_Result}}</h4>
@@ -77,3 +77,4 @@ answerArray.push(0)
 {% else %}
     <p>No quiz matches that name.</p>
 {% endif %}
+{% endblock %}
