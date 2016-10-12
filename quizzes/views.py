@@ -31,13 +31,9 @@ def quiz(request,Quiz_Name):
 			#we could change the model to have answers belong to questions
 			#rather than the other way around
 			for a in Answer.objects.filter(question=q).order_by('answerNumber'):
-				print str(a) + "\n"
 				quiz_answers.append(a)
-	for r in quiz_request.results.all().order_by('resultNumber'):
-		if (r != ','):
-			quiz_results.append(r)
 	template = loader.get_template('quizzes/quiz.html')
-	context = {'quiz_request': quiz_request, 'quiz_questions': quiz_questions, 'quiz_answers': quiz_answers, 'quiz_results': quiz_results}
+	context = {'quiz_request': quiz_request, 'quiz_questions': quiz_questions, 'quiz_answers': quiz_answers}
 	return render(request, 'quizzes/quiz.html', context)  
 #@csrf_protect
 def quiz_create(request):
@@ -112,16 +108,17 @@ def add_results(request):
 	return render(request,'quizzes/add_results.html',context)
 #@csrf_protect
 def result(request,Quiz_Name):
+	data = request.POST.dict()
+	correctAnswers = 0
 	quiz = Quiz.objects.get(Quiz_Title=Quiz_Name)
-	results = []
-	quiz.results.order_by('resultNumber','id')
-	quiz.save()
-	for r in quiz.results.all():
-		if (r != ','):
-			results.append(r)
-			print r.resultNumber
-	c = {'request' : request, 'results' : results}
-	c.update(csrf(request))
+	for z in range(1,quiz.question_set.count()+1):
+		q = quiz.question_set.get(questionNumber=z)
+		correctAnswer = q.answer_set.get(correctAnswer="True").answerNumber
+		print str(correctAnswer) + " " + data["question-"+str(z)] + "\n"
+		if (int(data["question-"+str(z)]) == correctAnswer):
+			print "correct answer!\n"
+			correctAnswers = correctAnswers+1	
+	c = {'request' : request, 'correctAnswers' : correctAnswers}
 	template = loader.get_template('quizzes/result.html')
 	#print results
 	return render(request,'quizzes/result.html',c)
