@@ -10,9 +10,7 @@
 	{% csrf_token %}
 {% for question in quiz_questions %}
 <h3>{{question.question_text}}</h3>
-<script type="text/javascript">
-answerArray.push(0)
-</script>
+
 {% for a in question.answer_set.all %}
 <input type="radio" name= "question-{{question.questionNumber}}" class="question-{{question.questionNumber}}" value={{a.answerNumber}}>{{a.answertext}}<br>
 {% endfor %}

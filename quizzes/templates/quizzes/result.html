@@ -1,26 +1,39 @@
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-
-<script type="text/javascript">
-	//this is a list of the answers to all questions
-	var answerArray = []
-	//this is a list of the scores for each answer to each question
-	var resultArray = []
-	//this is a list of scores for each result
-	var scoringArray = []
-	var numResults = 0
-	var resultTextArray = []
+{% extends "quizzes/base.html" %}
+{% block content %}
+<script>
+	function correctAnswer(question,answer)
+	{
+			$("#q" + String(question) + "a" + String(answer)).css('background-color' , 'lightgreen')
+	}
+	function incorrectAnswer(question,correctAnswer,incorrectAnswer)
+	{
+			$("#q" + String(question) + "a" + String(correctAnswer)).css('background-color' , 'lightgreen')
+			$("#q" + String(question) + "a" + String(incorrectAnswer)).css('background-color' , 'red')
+	}
 </script>
-{% if request %}
-<ul>
-	{%for e,k in request.POST.items %}
-	{% if e != 'csrfmiddlewaretoken' %}
-	<<li>{{e}} {{k}}</li> --!>
-	<script type="text/javascript">
-		answerArray.push({{k}})
-	</script>
-	{% endif %}
-	{% endfor %}
-</ul>
-<br>
-{% endif %}
+
 {{correctAnswers}}
+
+{% for question in quiz_questions %}
+<h3>{{question.question_text}}</h3>
+
+{% for a in question.answer_set.all %}
+<div  class="answerField" id="q{{question.questionNumber}}a{{a.answerNumber}}">{{a.answertext}}</div><br>
+{% endfor %}
+{% endfor %}
+
+{% for a,b in compareAnswerArray  %}
+{% if a == b %}
+<script>
+correctAnswer({{forloop.counter}}, {{a}})
+</script>
+{% else %}
+<script>
+incorrectAnswer({{forloop.counter}},{{a}},{{b}})
+	</script>
+{% endif %}
+
+
+
+{% endfor %}
+{% endblock %}

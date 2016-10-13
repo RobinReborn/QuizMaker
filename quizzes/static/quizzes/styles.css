@@ -47,3 +47,11 @@ body {
 	width: 60em;
 	height: 3em;
 }
+.correctAnswer
+{
+	background-color:green;
+}
+.incorrectAnswer
+{
+	background-color: red;
+}
