@@ -1,26 +1,14 @@
+{% extends 'quizzes/base.html' %}
+{% block content %}
 {% if results %}
 <h1>You've finished creating your quiz {{results.Quiz_Name}}</h1>
 <h2>{{results.Quiz_Description}}</h2>
 
-{% for q in quiz_questions %}
-<form id = {{q.question_text}}>
-	<h3>{{q.question_text}}</h3>
-	<input type='radio' name = 'a1' value={{q.answer1}}>{{q.answer1}}<br>
-	<input type='radio' name = 'a2' value={{q.answer2}}>{{q.answer2}}<br>
-	<input type='radio' name = 'a3' value={{q.answer3}}>{{q.answer3}}<br>
-	<input type='radio' name = 'a4' value={{q.answer4}}>{{q.answer4}}<br>
-</form>
+take your quiz at <a href ="/quizzes/{{results.Quiz_Name}}/">here</a>
+<br/>
+<br/>
 
-{% endfor %}}
-<ul>
-{{results.Questions}}
+Or go <a href="/quizzes/">here</a> to see more quizzes
 
-{{results.Results}}
-{% for key,val in results.items %}
-
-<li>{{key}} {{val}}</li>
-{% endfor %}
-</ul>
-{{results}}
-
+{% endblock %}
 {% endif %}

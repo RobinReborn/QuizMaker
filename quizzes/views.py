@@ -105,7 +105,7 @@ def add_results(request):
 				answer.correctAnswer = "True"
 			else:
 				answer.correctAnswer = "False"
-			answer.answertext = answerArray[x][a]
+			answer.answerText = answerArray[x][a]
 			answer.answerNumber = a+1
 			answer.save()
 			question_add.answer_set.add(answer)
@@ -119,18 +119,9 @@ def created(request):
 	template = loader.get_template('quizzes/quiz_created.html')
     #here we do some stuff to add the quiz, questions and results to our DB
 	quiz = Quiz()
-	quiz.Quiz_Title = request.POST['Quiz_Name']
-	quiz.Quiz_Description = request.POST['Quiz_Description']
-	quiz.save()
-	total_questions = int(data['numQuestions'])
-	quiz.save()
 	quiz_questions = []
-	quiz_results = []
-	for q in quiz.questions.all():
+	for q in quiz.question_set.all():
 		if (q != ','):
 			quiz_questions.append(q)
-	for r in quiz.results.all():
-		if (r != ','):
-			quiz_results.append(r)
-	context = {"results": data, "quiz_questions": quiz_questions, "quiz_results": quiz_results}
+	context = {"results": data, "quiz_questions": quiz_questions}
 	return render(request,'quizzes/quiz_created.html',context) 

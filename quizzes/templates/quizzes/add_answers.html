@@ -3,15 +3,6 @@
 
 {% block content %}
 <script>
-function changeToMultipleChoice(){
-	$(".MultipleChoice").show()
-	$(".UserInputAnswer").hide()
-}
-function changeToUserTyped(){
-	$(".MultipleChoice").hide()
-	$(".UserInputAnswer").show()
-}
-
 function addAnswer(answerQuestion){
 	var qa = answerQuestion.match(/\d+/g)
 	var question = qa[0]
@@ -52,16 +43,13 @@ function prepareAnswers(){
 
 Congratulations on adding your questions, now you need to specify how users will enter their answers
 <br/><br/>
-<form action="/quizzes/create/add_results" method="POST">
+<form action="/quizzes/create/created" method="POST">
 {% csrf_token %}
-<input type="radio"  name="quizType" value="Multiple Choice" onclick="changeToMultipleChoice()" checked>Multiple Choice</input>
-<input type="radio" name="quizType" value="User Types in Answer" onclick="changeToUserTyped()">User Types in Answer</input>
 
 <br/>
 
 
 <br/>
-<div class="MultipleChoice">
 Use the radio button to select the right answer for each question
 <h2>{{Quiz_Name}}</h2>
 <br/>
@@ -72,10 +60,7 @@ Use the radio button to select the right answer for each question
 <h3>{{forloop.counter}})   {{q}}</h3>
 
 
-<div class="UserInputAnswer" hidden>
-<input type="text" id = "UserInputAnswer" name="a{{forloop.counter}}"></input>
-</div>
-<div class="MultipleChoice">
+
 
 <div id='q{{forloop.counter}}a1wrapper'>
 <input type="radio" name="q{{forloop.counter}}a" value="1" checked="checked"></input></span> 
@@ -103,13 +88,13 @@ Use the radio button to select the right answer for each question
 
 <button type="button" id="addAnswerq{{forloop.counter}}" onclick="addAnswer($(this).prev().attr('id'))">Add Answer</button>
 <button type="button" id="removeAnswerq{{forloop.counter}}" onclick="removeAnswer($(this).prev().prev().attr('id'))">Remove Answer </button>
-</div>
 <br/>
 {% endfor %}
 
 <input type="submit" value="Submit Answers" onclick="prepareAnswers()" />
 <input type="hidden" name="Questions" id="Questions" value="{{questions}}"></input>
 <input type="hidden" name="Quiz_Name" value="{{Quiz_Name}}"></input>
+<input type="hidden" name="Quiz_Description" value="{{Quiz_Description}}"></input>
 <input type="hidden" name="AnswersArray" id="AnswersArray"></input>
 </form>
 {% endblock %}

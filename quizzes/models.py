@@ -5,7 +5,7 @@ class Quiz(models.Model):
 	Quiz_Description = models.CharField(max_length=1000)
 	#each of these is paired to a question
 	#questions = models.ManyToManyField('Question', blank=True)
-	results = models.ManyToManyField('Result', blank=True)
+	#results = models.ManyToManyField('Result', blank=True)
 	image = models.ImageField(upload_to='/images/',default=None)
 	date = models.DateTimeField(auto_now=True)
 	timesTaken = models.IntegerField(default=0)
@@ -27,19 +27,10 @@ class Question(models.Model):
 class Answer(models.Model):
 	#question = models.ForeignKey('Question',null=True,blank=True)
 	question = models.ForeignKey(Question,on_delete=models.CASCADE,default=Question.DEFAULT_PK)
-	answertext = models.CharField(max_length=100)
+	answerText = models.CharField(max_length=100)
 	answerNumber = models.IntegerField(default=0)
 	correctAnswer = models.CharField(max_length=20,default=None)
 	def __unicode__(self):
 		return unicode(self.answertext)
 	#Quiz_Part = models.ForeignKey(Quiz,default=1)
-class Result(models.Model):
-	#Quiz_Results = models.ForeignKey(Quiz,default=1)
-	#this will need to change to allow for easy scoring
-	Quiz_Scoring = models.CharField(max_length=100)
-	Quiz_Result = models.CharField(max_length=100)
-	resultNumber = models.IntegerField()
-	def __unicode__(self):
-		        return unicode(self.Quiz_Result)
-	Quiz_Result_Explanation = models.CharField(max_length=1000)
-	image = models.ImageField(upload_to='/images/',default=None)
+
