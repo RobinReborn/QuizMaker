@@ -1,6 +1,6 @@
 body {
 	
-	background-color: blue;
+	background-color: light-blue;
 }
 .question
 {
@@ -8,6 +8,10 @@ body {
 	height: 3em;
 }
 #user_input
+{
+	text-align: center;
+}
+.quiz-link
 {
 	text-align: center;
 }

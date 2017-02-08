@@ -126,6 +126,6 @@ USE_TZ = True
 #    os.path.join(BASE_DIR, "/"),
 #)
 
-STATIC_URL = '/static/'
+STATIC_URL = '/static/quizzes'
 STATIC_ROOT= '/home/robin/workspace/quizmaker/quizzes/static/quizzes'
 

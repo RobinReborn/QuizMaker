@@ -7,7 +7,7 @@
     <ul>
 	<li>test</li>
     {% for quiz in quiz_list %}
-        <li><a href="/quizzes/{{ quiz.Quiz_Title }}/">{{ quiz.Quiz_Title }}</a>  {{ quiz.Quiz_Description }}</li>
+        <li class="quiz-link"><a href="/quizzes/{{ quiz.Quiz_Title }}/">{{ quiz.Quiz_Title }}</a>  {{ quiz.Quiz_Description }}</li>
     {% endfor %}
 </ul>
 

@@ -128,11 +128,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 #STATIC_ROOT= os.path.join(BASE_DIR, "quizzes/static")
-STATIC_ROOT=    '/home/robin/workspace/quizmaker/static'
-STATICFILES_DIRS = ( os.path.join(BASE_DIR, "quizzes/static"), )
+STATIC_ROOT=    '/home/robin/workspace/quizmaker/quizzes/static'
+#STATICFILES_DIRS = ( os.path.join(BASE_DIR, "quizzes/static"), )
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
-    #'django.contrib.staticfiles.finders.AppDirectoriesFinder',    #causes verbose duplicate notifications in django 1.9
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',    #causes verbose duplicate notifications in django 1.9
 )
 
